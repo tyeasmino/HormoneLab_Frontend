@@ -37,7 +37,7 @@ const HeroSection = () => {
     return (
         <section>
             {/* Carousel Section */}
-            <div className="relative h-[450px] w-full overflow-hidden">
+            <div className="relative md:max-h-[450px] w-full overflow-hidden">
                 <div
                     className="flex transition-transform duration-700 ease-in-out"
                     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -59,8 +59,8 @@ const HeroSection = () => {
                                     : "opacity-0 translate-y-5"
                                 }`}
                         >
-                            <h2 className="text-4xl font-bold bg-black/50 px-6 py-2 rounded-lg">{slide.title}</h2>
-                            <p className="text-xl mt-2 bg-black/50 px-4 py-1 rounded-lg">{slide.subtitle}</p>
+                            <h2 className="md:text-4xl font-bold bg-black/50 px-6 py-2 rounded-lg">{slide.title}</h2>
+                            <p className="md:text-xl mt-2 bg-black/50 px-4 py-1 rounded-lg">{slide.subtitle}</p>
                         </div>
                     ))}
                 </div>
@@ -80,16 +80,16 @@ const HeroSection = () => {
                 </button>
             </div>
         
-            <div className="max-w-screen-xl mx-auto flex gap-5 items-center justify-between">
-                <div className="w-2/3">
-                    <h1 className="text-4xl font-bold">
+            <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row gap-5 p-5 items-center justify-between">
+                <div className="order-2 md:order-1 md:w-2/3">
+                    <h1 className="text-2xl md:text-4xl font-bold">
                         We Help People Get All Reports Online
                     </h1>
-                    <p className="text-xl font-semibold">
+                    <p className="text-justify md:text-xl font-semibold">
                         This helps our patients, clients, and marketing executives deliver reports quickly so that patients don’t have to go through the hassle of collecting reports in person.
                     </p>
                 </div>
-                <div className="w-1/3">
+                <div className="order-1 md:order-2 md:w-1/3">
                     <img src={bg1} alt="" />
                 </div>
             </div>
