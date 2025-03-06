@@ -6,7 +6,7 @@ import { Link } from 'react-router'
 
 const Navbar = () => {
     return (
-        <section className='max-w-screen-xl mx-auto'>
+        <section className='max-w-screen-xl md:px-20 mx-auto'>
             <div className="navbar bg-base-100">
                 <div className="navbar-start">
                     <div className="dropdown">
@@ -64,7 +64,7 @@ const Navbar = () => {
                         <li>
                             <details>
                                 <summary>Care at Hormone Lab</summary>
-                                <ul className="p-2 w-[200px]">
+                                <ul className="z-10 absolute top-10 p-2 w-[190px]">
                                     <li><a>Home Collection</a></li>
                                     <li><a>FNA & Paps Collection</a></li>
                                     <li><a>Appointment</a></li>
@@ -77,7 +77,7 @@ const Navbar = () => {
                         <li>
                             <details>
                                 <summary>Departments</summary>
-                                <ul className="p-2">
+                                <ul className="p-2 z-20 top-10 left-5">
                                     <li><a>Biochemistry</a></li>
                                     <li><a>Microbiology</a></li>
                                     <li><a>Immunology</a></li>
@@ -92,8 +92,8 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end flex gap-2">
-                    <a className="btn bg-green-400 btn-sm ">Login</a>
-                    <a className="btn bg-blue-400 btn-sm ">Register</a>
+                    <a className="px-6 py-1 rounded bg-green-400">Login</a>
+                    <a className="px-6 py-1 rounded bg-blue-400">Register</a>
                 </div>
             </div>
         </section>

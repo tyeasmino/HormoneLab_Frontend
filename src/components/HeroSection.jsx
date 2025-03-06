@@ -80,9 +80,9 @@ const HeroSection = () => {
                 </button>
             </div>
         
-            <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row gap-5 p-5 items-center justify-between">
+            <div className="max-w-screen-xl md:px-20 mx-auto flex flex-col md:flex-row gap-5 p-5 items-center justify-between">
                 <div className="order-2 md:order-1 md:w-2/3">
-                    <h1 className="text-2xl md:text-4xl font-bold">
+                    <h1 className="text-2xl md:text-3xl font-bold">
                         We Help People Get All Reports Online
                     </h1>
                     <p className="text-justify md:text-xl font-semibold">
