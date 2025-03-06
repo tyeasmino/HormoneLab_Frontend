@@ -6,7 +6,7 @@ import homecollection from '../assets/homecollection.jpg'
 const HomeBlood = () => {
     return (
         <section className='max-w-screen-xl md:px-20 md:py-10 mx-auto p-5 flex flex-col md:flex-row items-center justify-between'>
-            <div className='md:w-1/2'>
+            <div className='md:w-1/2 my-10 md:my-0'>
                 <img className='shadow-xl rounded-lg' src={homecollection} alt="" />
             </div>
             <div className='md:w-1/2 flex flex-col gap-3'>
@@ -14,7 +14,7 @@ const HomeBlood = () => {
                 <p className='text-justify text-gray-500'>We come to your home or workplace for your convenience. Currently, we are collecting blood samples from Mohammadpur.</p>
 
                 <h1 className='text-2xl font-bold mt-8'>Benifits of Home Blood Sample Collection</h1>
-                <div className='flex flex-col md:felx-row gap-3 md:gap-16 items-center'>
+                <div className='flex flex-col md:flex-row gap-3 md:gap-16 items-center'>
                     <Link to=''>
                         <p className='w-fit px-5 py-1 md:px-6 md:py-2 rounded text-white bg-blue-500 '>
                             READ MORE
