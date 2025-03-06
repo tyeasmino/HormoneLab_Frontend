@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 const Footer = () => {
     return (
         <div className='bg-gray-900'>
-            <div className='max-w-screen-xl md:px-20 mx-auto'>
+            <div className='max-w-screen-xl md:pt-10 mx-auto'>
                 <footer className="footer text-base-content p-10">
                     <nav>
                         <h6 className="text-xl text-white">Location</h6>
@@ -43,7 +43,10 @@ const Footer = () => {
                         </div>
                     </nav>
                 </footer>
-                <footer className="footer text-base-content border-base-300 border-t px-10 py-4">
+            </div>
+            <div className='w-full h-[1px] bg-gray-600'></div>
+            <div className='max-w-screen-xl mx-auto'>
+                <footer className="footer text-base-content p-10">
                     <div className='text-gray-500 flex items-center justify-center w-full'>
                         <MdCopyright /> Copyright 2022. All Rights Reserved.
                     </div>
