@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 const ClimateDisease = () => {
     return (
         <section className='py-10'>
-            <h1 className='max-w-screen-xl md:px-20 mx-auto flex text-2xl font-bold'>Climate Change and Health</h1>
+            <h1 className='max-w-screen-xl md:px-20 mx-auto p-5 flex text-2xl font-bold'>Climate Change and Health</h1>
             <section className='max-w-screen-xl md:px-20 gap-10 mx-auto p-5 flex flex-col md:flex-row items-center justify-between'>
                 <div className='md:w-1/2 h-[280px] flex flex-col gap-3 justify-between'>
 

@@ -14,7 +14,7 @@ const HomeBlood = () => {
                 <p className='text-justify text-gray-500'>We come to your home or workplace for your convenience. Currently, we are collecting blood samples from Mohammadpur.</p>
 
                 <h1 className='text-2xl font-bold mt-8'>Benifits of Home Blood Sample Collection</h1>
-                <div className='flex gap-16 items-center'>
+                <div className='flex flex-col md:felx-row gap-16 items-center'>
                     <Link to=''>
                         <p className='w-fit px-5 py-1 md:px-6 md:py-2 rounded text-white bg-blue-500 '>
                             READ MORE

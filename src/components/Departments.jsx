@@ -15,7 +15,7 @@ const Departments = () => {
 
                 <div className='flex flex-col gap-8'>
                     <div className='flex flex-col md:flex-row gap-8'>
-                        <div className='w-1/3 bg-white'>
+                        <div className='md:w-1/3 bg-white'>
                             <img src={biochemistry} className='w-full h-[200px]' alt="" />
                             <div className='p-7 flex flex-col gap-5'>
                                 <h3 className='font-semibold text-center'>Department of Biochemistry</h3>
@@ -23,14 +23,14 @@ const Departments = () => {
                             </div>
                         </div>
 
-                        <div className='w-1/3 bg-white'>
+                        <div className='md:w-1/3 bg-white'>
                             <img src={microbiology} className='w-full h-[200px]' alt="" />
                             <div className='p-7 flex flex-col gap-5'>
                                 <h3 className='font-semibold text-center'>Department of Microbiology</h3>
                                 <p className='text-gray-400 text-[12px] text-justify'>In the Department of Microbiology performs various microbiological procedures to cultivate, isolate and identify microorganisms</p>
                             </div>
                         </div>
-                        <div className='w-1/3 bg-white'>
+                        <div className='md:w-1/3 bg-white'>
                             <img src={immunology} className='w-full h-[200px]' alt="" />
                             <div className='p-7 flex flex-col gap-5'>
                                 <h3 className='font-semibold text-center'>Department of Immunology</h3>
@@ -39,7 +39,7 @@ const Departments = () => {
                         </div>
                     </div> 
                     <div className='flex flex-col md:flex-row gap-8'>
-                        <div className='w-1/3 bg-white'>
+                        <div className='md:w-1/3 bg-white'>
                             <img src={hematology} className='w-full h-[200px]' alt="" />
                             <div className='p-7 flex flex-col gap-5'>
                                 <h3 className='font-semibold text-center'>Department of Hematology and Clinical Pathology</h3>
@@ -47,14 +47,14 @@ const Departments = () => {
                             </div>
                         </div>
 
-                        <div className='w-1/3 bg-white'>
+                        <div className='md:w-1/3 bg-white'>
                             <img src={endocrinology} className='w-full h-[200px]' alt="" />
                             <div className='p-7 flex flex-col gap-5'>
                                 <h3 className='font-semibold text-center'>Department of Endocrinology</h3>
                                 <p className='text-gray-400 text-[12px] text-justify'>When it comes to dealing with your reproductive health, fertility, and menopause, in particular, the subject of hormones will come up a lot.</p>
                             </div>
                         </div>
-                        <div className='w-1/3 bg-white'>
+                        <div className='md:w-1/3 bg-white'>
                             <img src={histopathology} className='w-full h-[200px]' alt="" />
                             <div className='p-7 flex flex-col gap-5'>
                                 <h3 className='font-semibold text-center'>Department of Histopathology</h3>

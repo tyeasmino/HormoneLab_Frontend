@@ -5,7 +5,7 @@ import research from '../assets/disease/research.jpg'
 const Research = () => {
   return (
     <section className='bg-gray-100 py-10'>
-                    <h1 className='max-w-screen-xl md:px-20 mx-auto text-2xl font-bold'>Research</h1>
+                    <h1 className='max-w-screen-xl md:px-20 p-5 mx-auto text-2xl font-bold'>Research</h1>
             <section className='max-w-screen-xl md:px-20 gap-10 mx-auto p-5 flex flex-col md:flex-row items-center justify-between'>
                 <div className='md:w-1/2'>
                     <img className='h-[280px]' src={research} alt="" />
