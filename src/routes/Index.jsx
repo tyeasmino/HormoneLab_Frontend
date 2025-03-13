@@ -7,6 +7,7 @@ import AboutUs from '../pages/AboutUs'
 import ContactUs from '../pages/ContactUs'
 import SignIn from '../pages/SignIn'
 import SignUp from '../pages/SignUp'
+import Dashboard from '../pages/Dashboard'
 
 const Index = () => {
     return (
@@ -18,6 +19,10 @@ const Index = () => {
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/login" element={<SignIn />} />
                 <Route path="/register" element={<SignUp />} />
+                
+                
+                <Route path="/dashboard" element={<Dashboard />} />
+
             </Routes>
             <Footer />
         </BrowserRouter>
