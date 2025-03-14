@@ -8,24 +8,29 @@ import ContactUs from '../pages/ContactUs'
 import SignIn from '../pages/SignIn'
 import SignUp from '../pages/SignUp'
 import Dashboard from '../pages/Dashboard'
+import { AuthProvider } from '../contexts/AuthContext'
+import LabServices from '../pages/LabServices'
 
 const Index = () => {
     return (
-        <BrowserRouter>
-            <Navbar />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<AboutUs />} />
-                <Route path="/contact" element={<ContactUs />} />
-                <Route path="/login" element={<SignIn />} />
-                <Route path="/register" element={<SignUp />} />
-                
-                
-                <Route path="/dashboard" element={<Dashboard />} />
+        <AuthProvider>
+            <BrowserRouter>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<AboutUs />} />
+                    <Route path="/contact" element={<ContactUs />} />
+                    <Route path="/login" element={<SignIn />} />
+                    <Route path="/register" element={<SignUp />} />
+                    <Route path="/services" element={<LabServices />} />
+                    
+                    
+                    <Route path="/dashboard" element={<Dashboard />} />
 
-            </Routes>
-            <Footer />
-        </BrowserRouter>
+                </Routes>
+                <Footer />
+            </BrowserRouter>
+        </AuthProvider>
     )
 }
 

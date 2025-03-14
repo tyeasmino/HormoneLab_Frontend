@@ -7,7 +7,7 @@ const Footer = () => {
     return (
         <div className='bg-gray-900'>
             <div className='max-w-screen-xl md:pt-10 mx-auto'>
-                <footer className="footer text-base-content p-10">
+                <footer className="footer text-base-content px-10 md:px-0 py-10">
                     <nav>
                         <h6 className="text-xl text-white">Location</h6>
                         <p className='text-gray-500'>
@@ -46,7 +46,7 @@ const Footer = () => {
             </div>
             <div className='w-full h-[1px] bg-gray-600'></div>
             <div className='max-w-screen-xl mx-auto'>
-                <footer className="footer text-base-content p-10">
+                <footer className="footer text-base-content py-10">
                     <div className='text-gray-500 flex items-center justify-center w-full'>
                         <MdCopyright /> Copyright 2022. All Rights Reserved.
                     </div>

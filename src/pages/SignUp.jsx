@@ -202,18 +202,18 @@ const SignUp = () => {
                   <label className="flex items-center gap-3 label cursor-pointer">
                     <input
                       type="radio"
-                      id='marketingExecutive'
-                      value='marketingExecutive'
+                      id="marketingExecutive"
+                      value="marketingExecutive"
                       onChange={handleChange}
-                      name="user_type" className="radio radio-xs checked:bg-green-600" defaultChecked />
-                    <span className="label-text ">Marketing Executive</span>
+                      name="user_type" className="radio radio-xs checked:bg-green-600" />
+                    <span className="label-text" htmlFor="marketingExecutive">Marketing Executive</span>
                   </label>
                 </div>
               </div>
             </div>
-            <div className='bg-blue-500 py-2 my-5 rounded text-center text-white font-semibold'>
-              <button type='submit'>Sign Up</button>
-            </div>
+            <button type='submit' className='w-full bg-blue-500 py-2 my-5 rounded text-center text-white font-semibold'>
+                Sign Up 
+            </button>
           </form>
 
           {successMessage && (

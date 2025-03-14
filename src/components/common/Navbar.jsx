@@ -1,13 +1,38 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import hlicLogo from '../../assets/hlicLogo.jpg'
-import { Link } from 'react-router'
-
+import { Link, useLocation } from 'react-router'
+import { MdOutlineLightMode } from "react-icons/md";
+import { MdLightMode } from "react-icons/md";
+import { AuthContext } from '../../contexts/AuthContext';
+import { LiaUserEditSolid } from 'react-icons/lia';
 
 
 const Navbar = () => {
+    const { user, logout } = useContext(AuthContext)
+    const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")) || false);
+    const [profileData, setProfileData] = useState({ image: '', balance: null });
+    const location = useLocation(); 
+    const token = localStorage.getItem('token');
+
+
+    useEffect(() => {
+        localStorage.setItem("darkMode", JSON.stringify(darkMode));
+
+        if (darkMode) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    }, [darkMode]);
+
+
+    const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile'
+    || location.pathname === '/reports' || location.pathname === '/deposites' || location.pathname === '/labservices';
+
+
     return (
-        <section className='max-w-screen-xl md:px-10 mx-auto'>
-            <div className="navbar bg-base-100">
+        <section className='max-w-screen-xl mx-auto'>
+            <div className="navbar">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -35,7 +60,7 @@ const Navbar = () => {
                                     <li><a>FNA & Paps Collection</a></li>
                                     <li><a>Appointment</a></li>
                                     <li><a>Doctor & Medical Stuff</a></li>
-                                    <li><a>Lab Services</a></li>
+                                    <li> <Link to='/services'>Lab Services</Link></li>
                                     <li><a>Report Panel</a></li>
                                 </ul>
                             </li>
@@ -60,7 +85,7 @@ const Navbar = () => {
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1">
-                        <li><a>Home</a></li>
+                        <li><Link to='/'>Home</Link></li>
                         <li>
                             <details>
                                 <summary>Care at Hormone Lab</summary>
@@ -69,7 +94,7 @@ const Navbar = () => {
                                     <li><a>FNA & Paps Collection</a></li>
                                     <li><a>Appointment</a></li>
                                     <li><a>Doctor & Medical Stuff</a></li>
-                                    <li><a>Lab Services</a></li>
+                                    <li><Link to='/services'>Lab Services</Link></li>
                                     <li><a>Report Panel</a></li>
                                 </ul>
                             </details>
@@ -92,8 +117,52 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end flex gap-2">
-                    <Link to='/login' className="px-6 py-1 rounded bg-green-400">Login</Link>
-                    <Link to='/register' className="px-6 py-1 rounded bg-blue-400">Register</Link>
+                    <div className="flex items-center gap-2">
+                        {/* dark mode */}
+                        <div className="dropdown dropdown-end">
+                            <div className=" ">
+                                <p onClick={() => setDarkMode(!darkMode)} className=' cursor-pointer text-[25px]'>
+                                    {darkMode ? <MdOutlineLightMode /> : <MdLightMode />}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="dropdown dropdown-end">
+                            {user ? (
+                                <>
+                                    <div tabIndex={0} role="button" className="  avatar">
+                                        <div className="w-10 rounded-full">
+                                            {/* user profile img */}
+                                            {profileData.image ? (
+                                                <img src={profileData.image} />
+                                            ) : (
+                                                <LiaUserEditSolid className='cursor-pointer text-[35px] pt-2 pl-2' />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                                        {/* Conditionally render profile-related links */}
+                                        {!isOnProtectedPage && (
+                                            <>
+                                                <li>
+                                                    <Link to="/dashboard">Dashboard</Link>
+                                                </li>
+                                            </>
+                                        )}
+
+                                        {/* Logout button is always visible */}
+                                        <li>
+                                            <button onClick={logout}>Logout</button>
+                                        </li>
+                                    </ul>
+                                </>) : (<>
+                                    <div className="flex gap-2">
+                                        <Link to='/login' className="px-6 py-1 rounded bg-green-400">Login</Link>
+                                        <Link to='/register' className="px-6 py-1 rounded bg-blue-400">Register</Link>
+                                    </div>
+                                </>)}
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
