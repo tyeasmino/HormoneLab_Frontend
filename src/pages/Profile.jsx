@@ -8,7 +8,7 @@ const Profile = () => {
     const {user} = useContext(AuthContext)
 
   return (
-    <section className='flex md:py-40'>
+    <section className='flex p-5'>
         <Sidebar />
 
         <section className='max-w-screen-xl m-auto'>
