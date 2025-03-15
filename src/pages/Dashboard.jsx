@@ -3,12 +3,14 @@ import MarketingExecutiveDashboard from '../components/marketing_execute/Marketi
 import HospitalAuthorityDashboard from '../components/hospital_authority/HospitalAuthorityDashboard'
 import { AuthContext } from '../contexts/AuthContext'
 import HlicAuthorityDashboard from '../components/hlic_authority/HlicAuthorityDashboard'
+import Sidebar from '../components/common/Sidebar'
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext)
 
   return (
-    <section>
+    <section className='flex md:my-40'>
+      <Sidebar />
 
       <section className='max-w-screen-xl m-auto'>
         {(user && user.ha) ?

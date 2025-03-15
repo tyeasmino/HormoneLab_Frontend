@@ -27,7 +27,7 @@ const Navbar = () => {
 
 
     const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile'
-    || location.pathname === '/reports' || location.pathname === '/deposites' || location.pathname === '/labservices';
+    || location.pathname === '/reports' || location.pathname === '/deposites';
 
 
     return (
@@ -141,6 +141,12 @@ const Navbar = () => {
                                         </div>
                                     </div>
                                     <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                                       
+                                        
+                                           <li>
+                                            <button disabled>{user.first_name} {user.last_name}</button>
+                                        </li>
+
                                         {/* Conditionally render profile-related links */}
                                         {!isOnProtectedPage && (
                                             <>
@@ -154,6 +160,7 @@ const Navbar = () => {
                                         <li>
                                             <button onClick={logout}>Logout</button>
                                         </li>
+                                        
                                     </ul>
                                 </>) : (<>
                                     <div className="flex gap-2">

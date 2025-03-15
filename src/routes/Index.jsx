@@ -10,6 +10,8 @@ import SignUp from '../pages/SignUp'
 import Dashboard from '../pages/Dashboard'
 import { AuthProvider } from '../contexts/AuthContext'
 import LabServices from '../pages/LabServices'
+import Profile from '../pages/Profile'
+import Reports from '../pages/Reports'
 
 const Index = () => {
     return (
@@ -26,6 +28,8 @@ const Index = () => {
                     
                     
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/reports" element={<Reports />} />
 
                 </Routes>
                 <Footer />
