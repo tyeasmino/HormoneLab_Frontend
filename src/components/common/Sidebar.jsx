@@ -12,7 +12,6 @@ import { AuthContext } from '../../contexts/AuthContext';
 
 
 
-
 const Sidebar = () => {
     const { user } = useContext(AuthContext);
     const [collapsed, setCollapsed] = useState(false);

@@ -12,16 +12,41 @@ const useProfile = (type, userId, token) => {
     });
 
     const [locations, setLocations] = useState([]);
-    
+
+    // 🔹 Handle Input Changes (Including Image Upload)
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
-        if (type === 'file') {
-            setProfileData({ ...profileData, [name]: files[0] });
+        
+        if (type === 'file' && files[0]) {
+            uploadImage(files[0]);  // Automatically upload the image
         } else {
-            setProfileData({ ...profileData, [name]: value });
+            setProfileData(prev => ({ ...prev, [name]: value }));
         }
     };
 
+    // 🔹 Upload Image to Cloudinary
+    const uploadImage = async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "your_upload_preset"); // Replace with your Cloudinary upload preset
+        formData.append("cloud_name", "your_cloud_name"); // Replace with your Cloudinary cloud name
+
+        try {
+            const response = await fetch("https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.secure_url) {
+                setProfileData(prev => ({ ...prev, image: data.secure_url })); // Store Cloudinary URL
+            }
+        } catch (error) {
+            console.error("Error uploading image:", error);
+        }
+    };
+
+    // 🔹 Fetch User Profile
     const fetchProfile = async () => {
         try {
             const endpoint = type === 'me' ? `executives/marketing-executive` : 'fitFinders/fit-finder';
@@ -31,20 +56,14 @@ const useProfile = (type, userId, token) => {
             );
 
             if (res.data) {
-                setProfileData({
-                    ...profileData,
-                    ...res.data,
-                });
+                setProfileData(prev => ({ ...prev, ...res.data }));
             }
         } catch (error) {
-            console.log('Error fetching profile:', error);
+            console.error('Error fetching profile:', error);
         }
     };
 
-    // Upload image function for profile image
-    const uploadImage = async (image) => {
-    };
-    
+    // 🔹 Update Profile (Including Image URL)
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
 
@@ -53,52 +72,47 @@ const useProfile = (type, userId, token) => {
             return;
         }
 
-        const updatedProfileData = { ...profileData };
-        const profileImageUrl = await uploadImage(profileData.image);
-
-        updatedProfileData.image = profileImageUrl || profileData.image;
-
         const endpoint = type === 'me' ? `executives/marketing-executive` : 'fitFinders/fit-finder';
+
         try {
             const res = await axios.put(
                 `https://hormone-lab-backend.vercel.app/${endpoint}/${userId}/`,
-                updatedProfileData,
+                profileData,
                 { headers: { Authorization: `Token ${token}` } }
             );
 
             if (res.status === 200) {
-                setProfileData(updatedProfileData);
+                alert("Profile updated successfully.");
             } else {
-                console.log('Profile update failed.');
+                console.error('Profile update failed.');
             }
         } catch (error) {
-            console.log('Error during the profile update:', error);
+            console.error('Error during profile update:', error);
         }
     };
 
-        // Fetching locations
-        const fetchLocations = async () => {
-            try {
-                const res = await axios.get('https://hormone-lab-backend.vercel.app/clients/locations/');
-                setLocations(res.data); // Set the locations state with the response data
-            } catch (error) {
-                console.error('Error fetching locations:', error);
-            }
-        };
-
-
+    // 🔹 Fetch Locations
+    const fetchLocations = async () => {
+        try {
+            const res = await axios.get('https://hormone-lab-backend.vercel.app/clients/locations/');
+            setLocations(res.data);
+        } catch (error) {
+            console.error('Error fetching locations:', error);
+        }
+    };
 
     useEffect(() => {
-        fetchLocations(); // Fetch locations on component mount
+        fetchLocations();
         if (userId) {
-            fetchProfile(); // Fetch the profile if userId exists
+            fetchProfile();
         }
     }, [userId]);
 
     return {
         profileData,
+        setProfileData,  // Ensure setProfileData is returned
         handleChange,
-        locations, // Return locations to use in the component
+        locations,
         handleUpdateProfile,
     };
 };
