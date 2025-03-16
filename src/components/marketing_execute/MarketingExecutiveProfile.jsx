@@ -5,75 +5,39 @@ import axios from 'axios';
 
 const MarketingExecutiveProfile = () => {
   const { user } = useContext(AuthContext);
-
   const [profileData, setProfileData] = useState({
     user: '',
     image: '',
-    due: '',
-    extra_paid: '',
+    curriculum_vitae: '',
     phone: '',
     location: '',
   });
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-
-    if (e.target.multiple) {
-      const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
-      setProfileData({
-        ...profileData,
-        [name]: selectedValues,
-      });
-    } else if (files && files[0]) {
-      const file = files[0];
-
-      // For image uploads (e.g., profile image or CV)
-      if (name === "curriculum_vitae") {
-        openCloudinaryWidget(file);
-      } else if (name === "image") {
-        setProfileData({
-          ...profileData,
-          [name]: file,
-        });
-      }
-    } else {
-      setProfileData({
-        ...profileData,
-        [name]: value,
-      });
-    }
-  };
-
-
-  const openCloudinaryWidget = () => {
-    // Determine the resource type based on the file extension
-    const resourceType = (profileData.curriculum_vitae && profileData.curriculum_vitae.type === 'application/pdf') ? 'pdf' : 'auto';
-
-    // Open the Cloudinary upload widget
-    window.cloudinary.openUploadWidget(
+  const openCloudinaryWidget = (resourceType) => {
+    const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: 'dxcwijywg',
-        uploadPreset: 'SkillCrafterCVs',  // SkillCrafterCVs
-        resourceType: resourceType, // Automatically set the resource type to 'pdf' for PDFs
+        uploadPreset: 'SkillCrafterCVs',
+        resourceType: resourceType,
         sources: ['local'],
-        showUploadMoreButton: false,
+        multiple: false,
+        maxFiles: 1,
+        folder: 'profile_uploads',
+        clientAllowedFormats: resourceType === 'raw' ? ['pdf'] : ['jpg', 'jpeg', 'png'],
       },
       (error, result) => {
         if (error) {
           console.error('Error uploading to Cloudinary:', error);
         } else if (result.event === 'success') {
-          // Cloudinary upload successful
           const fileUrl = result.info.secure_url;
-          console.log('File uploaded to Cloudinary:', fileUrl);
-
-          // Update the state with the Cloudinary file URL
-          setProfileData({
-            ...profileData,
-            curriculum_vitae: fileUrl,
-          });
+          setProfileData(prev => ({
+            ...prev,
+            [resourceType === 'raw' ? 'curriculum_vitae' : 'image']: fileUrl
+          }));
         }
       }
     );
+    widget.open();
   };
 
   useEffect(() => {
@@ -82,18 +46,10 @@ const MarketingExecutiveProfile = () => {
         const token = localStorage.getItem("token");
         const res = await axios.get(
           `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}`,
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
+          { headers: { Authorization: `Token ${token}` } }
         );
-
         if (res.data) {
-          setProfileData((prevData) => ({
-            ...prevData,
-            ...res.data,
-          }));
+          setProfileData(prev => ({ ...prev, ...res.data }));
         }
       } catch (error) {
         console.error("Error fetching profile: ", error);
@@ -107,44 +63,19 @@ const MarketingExecutiveProfile = () => {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem('token');
-
     if (!token) {
       alert("You are not logged in.");
       return;
     }
-
-    let profileImageUrl = await uploadImage(profileData.image);
-
-    let curriculumVitaeUrl = profileData.curriculum_vitae;
-    if (profileData.curriculum_vitae instanceof File) {
-      curriculumVitaeUrl = await uploadToCloudinary(profileData.curriculum_vitae);
-    }
-
-    const updatedProfileData = {
-      ...profileData,
-      image: profileImageUrl || profileData.image,
-      curriculum_vitae: curriculumVitaeUrl || profileData.curriculum_vitae,
-    };
-
     try {
       const res = await axios.put(
         `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}/`,
-        updatedProfileData,
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
+        profileData,
+        { headers: { Authorization: `Token ${token}` } }
       );
-
       if (res.status === 200) {
         alert("Profile updated successfully.");
-        setProfileData((prevData) => ({
-          ...prevData,
-          ...updatedProfileData,
-        }));
       } else {
         console.log("Profile update failed.");
       }
@@ -153,40 +84,7 @@ const MarketingExecutiveProfile = () => {
     }
   };
 
-  const uploadImage = async (image) => {
-    if (image && image instanceof File) {
-      const formData = new FormData();
-      formData.append('image', image);
-
-      try {
-        const imgbbResponse = await fetch('https://api.imgbb.com/1/upload?key=648e380c7b8d76ec81662ddc06d73ec5', {
-          method: 'POST',
-          body: formData,
-        });
-
-        const imgbbData = await imgbbResponse.json();
-
-        if (imgbbData.status === 200) {
-          return imgbbData.data.url;
-        } else {
-          alert('Image upload failed!');
-          return '';
-        }
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        alert('Image upload failed!');
-        return '';
-      }
-    }
-    return '';
-  };
-
-  const token = localStorage.getItem('token');
-  const { locations } = useProfile(
-    'me',
-    user.me,
-    token
-  )
+  const { locations } = useProfile('me', user.me, localStorage.getItem('token'));
 
 
   return (
@@ -197,7 +95,7 @@ const MarketingExecutiveProfile = () => {
           <p className=' text-center'>Ensure your profile is updated to get orders</p>
         </div>
 
-        <form onSubmit={handleUpdateProfile}>
+        {/* <form onSubmit={handleUpdateProfile}>
           <div className='flex flex-col md:flex-row gap-5'>
             <div className='m-5 w-full'>
               <input
@@ -294,6 +192,24 @@ const MarketingExecutiveProfile = () => {
               Update Profile
             </button>
           </div>
+        </form> */}
+
+<form onSubmit={handleUpdateProfile}>
+          <div className='mb-4'>
+            <label className="text-sm font-medium text-gray-700">Curriculum Vitae ( CV )</label>
+            <button type="button" className='btn' onClick={() => openCloudinaryWidget('raw')}> Upload CV (PDF) </button>
+            {profileData.curriculum_vitae && (
+              <a href={profileData.curriculum_vitae} target="_blank" rel="noopener noreferrer" className='btn btn-secondary'> Download CV </a>
+            )}
+          </div>
+          <div className="mb-4">
+            <label className="text-sm font-medium text-gray-700">Profile Image</label>
+            <button type="button" className='btn' onClick={() => openCloudinaryWidget('image')}> Upload Image </button>
+            {profileData.image && <img src={profileData.image} alt="Profile" className="w-20 h-20 mt-2 rounded-xl" />}
+          </div>
+          <button className='bg-blue-600 px-5 py-2 text-sm text-white rounded' type="submit">
+            Update Profile
+          </button>
         </form>
       </div>
     </section>
