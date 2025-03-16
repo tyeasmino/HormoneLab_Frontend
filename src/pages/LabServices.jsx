@@ -65,7 +65,7 @@ const LabServices = () => {
         <section className="max-w-6xl mx-auto py-12 px-4">
             {/* Title and Search Bar */}
             <div className="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
-                <h2 className="md:text-3xl font-bold text-center text-gray-900 w-full md:w-auto">
+                <h2 className="md:text-3xl font-bold text-center w-full md:w-auto">
                     💉 Lab Test Rate Chart
                 </h2>
 

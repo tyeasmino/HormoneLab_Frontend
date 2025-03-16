@@ -157,7 +157,11 @@ const MarketingExecutiveProfile = () => {
   // 🔹 Fetch Locations
   const fetchLocations = async () => {
     try {
-      const res = await axios.get('https://hormone-lab-backend.vercel.app/clients/all_locations/');
+      const endpoint = profileData.location ? 
+        'https://hormone-lab-backend.vercel.app/clients/all_locations/' : 
+        'https://hormone-lab-backend.vercel.app/clients/locations/';
+      
+      const res = await axios.get(endpoint);
       setLocations(res.data);
     } catch (error) {
       console.error('Error fetching locations:', error);
@@ -190,9 +194,8 @@ const MarketingExecutiveProfile = () => {
     if (user.me) {
       fetchProfile();
     }
-  }, [user.me]);
-
-
+  }, [user.me, profileData.location]);
+  
 
   return (
     <section className='w-[500px] m-auto shadow p-5'>

@@ -3,7 +3,7 @@ import { AiOutlineNodeCollapse, AiOutlineNodeExpand } from 'react-icons/ai';
 import { LuLayoutDashboard } from 'react-icons/lu';
 import { MdOutlineInventory } from 'react-icons/md';
 import { LuTrendingUpDown } from 'react-icons/lu';
-import { TbRulerMeasure } from 'react-icons/tb';
+import { BsHospital } from "react-icons/bs";
 import { Link, useLocation } from 'react-router-dom';
 import { TbMoodEdit } from "react-icons/tb";
 import { IoShirtOutline } from "react-icons/io5";
@@ -17,7 +17,7 @@ const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
     const location = useLocation();
     const toggleSidebar = () => setCollapsed(!collapsed);
-    const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile' || location.pathname === '/reports';
+    const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile' || location.pathname === '/reports' ||  location.pathname === '/hospitals' ;
 
     return (
         <div className={`sidebar bg-purple h-full p-4 fixed left-0 top-20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
@@ -131,28 +131,28 @@ const Sidebar = () => {
           </>
         ) : null} */}
 
-                {/* {user && user.fitFinder ? (
+                 {user && user.me ? (
           <>
             <li className="relative group">
               <Link
-              data-tour-element='measurement'
-                to="/measurement"
-                className={`flex items-center gap-2 ${location.pathname === "/measurement" ? "bg-white  dark:bg-transparent p-4 shadow font-semibold" : ""}`}
+              data-tour-element='hospitals'
+                to="/hospitals"
+                className={`flex items-center gap-2 ${location.pathname === "/hospitals" ? "bg-white  dark:bg-transparent p-4 shadow font-semibold" : ""}`}
               >
-                <TbRulerMeasure
+                <BsHospital
                   className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
                 />
                 
                 <span
                   className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
                 >
-                  Measurement
+                  Hospitals
                 </span>
-                {!collapsed && <span className="ml-2">Measurement</span>}
+                {!collapsed && <span className="ml-2">Hospitals</span>}
               </Link>
             </li>
           </>
-        ) : null} */}
+        ) : null} 
 
                 <li className="relative group">
                     <Link

@@ -11,8 +11,8 @@ import Dashboard from '../pages/Dashboard'
 import { AuthProvider } from '../contexts/AuthContext'
 import LabServices from '../pages/LabServices'
 import Profile from '../pages/Profile'
-import Reports from '../pages/Reports'
-import Helping from '../components/marketing_execute/Helping'
+import Reports from '../pages/Reports' 
+import Hospitals from '../pages/Hospitals'
 
 const Index = () => {
     return (
@@ -31,7 +31,8 @@ const Index = () => {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/reports" element={<Reports />} />
-                    <Route path="/helping" element={<Helping />} />
+                    {/* <Route path="/helping" element={<Helping />} /> */}
+                    <Route path="/hospitals" element={<Hospitals />} />
 
                 </Routes>
                 <Footer />
