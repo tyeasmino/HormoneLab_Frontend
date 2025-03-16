@@ -33,12 +33,12 @@ const Sidebar = () => {
             </div>
 
 
-            <ul className="space-y-6">
+            <ul className="space-y-1">
                 <li className="relative group">
                     <Link
                         data-tour-element='dashboard'
                         to="/dashboard"
-                        className={`flex items-center gap-2 ${location.pathname === "/dashboard" ? "bg-white dark:bg-transparent p-4 shadow font-semibold" : ""}`}
+                        className={`flex items-center gap-2 ${location.pathname === "/dashboard" ? "p-1 shadow font-semibold" : ""}`}
                     >
                         <LuLayoutDashboard
                             className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
@@ -56,7 +56,7 @@ const Sidebar = () => {
                     <Link
                         data-tour-element='profile'
                         to="/profile"
-                        className={`flex items-center gap-2 ${location.pathname === "/profile" ? "bg-white  dark:bg-transparent md:p-4 shadow font-semibold" : ""}`}
+                        className={`flex items-center gap-2 ${location.pathname === "/profile" ? "p-1 shadow font-semibold" : ""}`}
                     >
                         <TbMoodEdit
                             className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
@@ -158,7 +158,7 @@ const Sidebar = () => {
                     <Link
                         data-tour-element='orders'
                         to="/reports"
-                        className={`flex items-center gap-2 ${location.pathname === "/reports" ? "bg-white  dark:bg-transparent md:p-4 shadow font-semibold" : ""}`}
+                        className={`flex items-center gap-2 ${location.pathname === "/reports" ? "p-1 shadow font-semibold" : ""}`}
                     >
                         <LuClipboardList
                             className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}

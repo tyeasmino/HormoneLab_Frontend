@@ -1,23 +1,57 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import useProfile from '../../apiServices/userProfile';
+import useProfile from '../../apiServices/userProfile'; // Make sure the hook is used
 import axios from 'axios';
 
 const MarketingExecutiveProfile = () => {
   const { user } = useContext(AuthContext);
+  const token = localStorage.getItem('token');
+
   const [profileData, setProfileData] = useState({
-    user: '',
-    image: '',
-    curriculum_vitae: '',
-    phone: '',
-    location: '',
+    image: "",
+    due: "",
+    extra_paid: "",
+    phone: "",
+    user: "",
+    location: "",
   });
+
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (e.target.multiple) {
+      const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
+      setProfileData({
+        ...profileData,
+        [name]: selectedValues,
+      });
+    } else if (files && files[0]) {
+      const file = files[0];
+
+      // For image uploads (e.g., profile image or CV)
+      if (name === "image") {
+        openCloudinaryWidget(file);
+      } else if (name === "cv") {
+        setProfileData({
+          ...profileData,
+          [name]: file,
+        });
+      }
+    } else {
+      setProfileData({
+        ...profileData,
+        [name]: value,
+      });
+    }
+  };
+
 
   const openCloudinaryWidget = (resourceType) => {
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: 'dxcwijywg',
-        uploadPreset: 'SkillCrafterCVs',
+        uploadPreset: 'HormoneLab',
         resourceType: resourceType,
         sources: ['local'],
         multiple: false,
@@ -40,16 +74,27 @@ const MarketingExecutiveProfile = () => {
     widget.open();
   };
 
+
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
           `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}`,
-          { headers: { Authorization: `Token ${token}` } }
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
         );
+
         if (res.data) {
-          setProfileData(prev => ({ ...prev, ...res.data }));
+          setProfileData((prevData) => ({
+            ...prevData,
+            specialization: res.data.specialization || [],
+            ...res.data,
+          }));
         }
       } catch (error) {
         console.error("Error fetching profile: ", error);
@@ -63,19 +108,42 @@ const MarketingExecutiveProfile = () => {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
+
     const token = localStorage.getItem('token');
+
     if (!token) {
       alert("You are not logged in.");
       return;
     }
+
+
+    let profileImageUrl = profileData.image;
+    if (profileData.image instanceof File) {
+      profileImageUrl = await uploadToCloudinary(profileData.image);
+    }
+
+    const updatedProfileData = {
+      ...profileData,
+      image: profileImageUrl || profileData.image,
+    };
+
     try {
       const res = await axios.put(
         `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}/`,
-        profileData,
-        { headers: { Authorization: `Token ${token}` } }
+        updatedProfileData,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
       );
+
       if (res.status === 200) {
         alert("Profile updated successfully.");
+        setProfileData((prevData) => ({
+          ...prevData,
+          ...updatedProfileData,
+        }));
       } else {
         console.log("Profile update failed.");
       }
@@ -83,34 +151,68 @@ const MarketingExecutiveProfile = () => {
       console.error("Error during the profile update:", error);
     }
   };
+  const [locations, setLocations] = useState([]);
+  const [isLocationSet, setIsLocationSet] = useState(false);
 
-  const { locations } = useProfile('me', user.me, localStorage.getItem('token'));
+  // 🔹 Fetch Locations
+  const fetchLocations = async () => {
+    try {
+      const res = await axios.get('https://hormone-lab-backend.vercel.app/clients/all_locations/');
+      setLocations(res.data);
+    } catch (error) {
+      console.error('Error fetching locations:', error);
+    }
+  };
+
+
+  const fetchProfile = async () => {
+    try {
+      // const endpoint = type === 'me' ? `executives/marketing-executive` : 'fitFinders/fit-finder';
+      // const userId = type === 'md' ? {user.me} : {user.ha}
+      const res = await axios.get(
+        `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}/`,
+        { headers: { Authorization: `Token ${token}` } }
+      );
+
+      if (res.data) {
+        setProfileData(prev => ({ ...prev, ...res.data }));
+      }
+      if (res.data.location) {
+        setIsLocationSet(true);  // Mark location as set if it exists
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLocations();
+    if (user.me) {
+      fetchProfile();
+    }
+  }, [user.me]);
+
 
 
   return (
-    <section className='max-w-screen-lg m-auto shadow p-5'>
+    <section className='w-[500px] m-auto shadow p-5'>
       <div className='flex flex-col gap-5 relative'>
         <div>
-          <h2 className='md:text-3xl font-bold text-gray-800 text-center'>Update Your Profile</h2>
+          <h2 className='md:text-3xl font-bold text-center'>Update Your Profile</h2>
           <p className=' text-center'>Ensure your profile is updated to get orders</p>
         </div>
 
-        {/* <form onSubmit={handleUpdateProfile}>
-          <div className='flex flex-col md:flex-row gap-5'>
-            <div className='m-5 w-full'>
-              <input
-                type="text" name="user" id="user" hidden
-                value={profileData.user} onChange={handleChange}
-              />
-
-              <h6 className='text-[20px] font-bold text-heading'>Shop Details</h6>
-
+        <form onSubmit={handleUpdateProfile}>
+          <section className='flex gap-5'>
+            <div className='w-2/3'>
+              {/* Location Field */}
               <div className='flex flex-col mb-5'>
-                <label className='font-semibold text-sm' htmlFor="shop_address">Location</label>
+                <label className='font-semibold text-sm' htmlFor="location">Location</label>
                 <select
                   name="location"
                   value={profileData.location}
                   onChange={handleChange}
+                  disabled={isLocationSet}
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-heading focus:outline-none focus:ring-0 focus:border-heading peer"
                 >
                   <option value="" disabled>Select a Location</option>
@@ -120,63 +222,18 @@ const MarketingExecutiveProfile = () => {
                     </option>
                   ))}
                 </select>
-              </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700 flex items-center justify-between">
-                  Curriculum Vitae ( CV )
-                </label>
-
-                <button type="button" className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer' onClick={() => openCloudinaryWidget()}> Upload CV (PDF) </button>
-
-                {profileData.curriculum_vitae && profileData.curriculum_vitae instanceof File && (
-                  <p className="text-xs text-[#425BF5] mt-1">New Image Uploaded</p>
-                )}
-                {profileData.curriculum_vitae && !(profileData.curriculum_vitae instanceof File) && (
-                  <Link to={profileData.curriculum_vitae} target='blank' className='block rounded-lg py-2.5 px-5 w-fit my-2 text-sm text-[#F4F5F7] bg-[#141A34]  appearance-none  focus:outline-none focus:ring-0 focus:border-[#F4F5F7] peer' >  Download CV </Link>
+                {isLocationSet && (
+                  <p className="mt-2 text-sm text-gray-400">Location cannot be changed.</p>
                 )}
 
               </div>
 
-
-
-
-
-
-              <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700 flex items-center justify-between">
-                  Profile Image
-                </label>
-
-                <input type="file" name="image" onChange={handleChange}
-                  className=" file-input file-input-bordered w-full " />
-                {profileData.image && profileData.image instanceof File && (
-                  <p className="text-xs text-[#425BF5] mt-1">New Image Uploaded</p>
-                )}
-                {profileData.image && !(profileData.image instanceof File) && (
-                  <img src={profileData.image} alt="Attachment Preview" className="w-[100px] h-[100px] mt-2 rounded-xl" />
-                )}
-              </div>
-
-              <h6 className='text-[20px] font-bold text-heading'>Contact Details</h6>
-              <div className='flex w-full flex-col'>
+              {/* Phone Field */}
+              <div className='flex w-full flex-col mb-5'>
                 <label className='font-semibold text-sm' htmlFor="phone">Phone</label>
                 <input
-                  type="number"
+                  type="tel"
                   name="phone"
                   value={profileData.phone}
                   onChange={handleChange}
@@ -185,31 +242,32 @@ const MarketingExecutiveProfile = () => {
                 />
               </div>
             </div>
-          </div>
 
-          <div className='flex text-center md:items-end justify-center md:justify-end mx-5'>
+            <div className='w-1/3'>
+              {/* Profile Image Upload */}
+              <div className="mb-4">
+
+                <button type="button" className='bg-bg-dark text-sm px-3 py-1 rounded-md text-white' onClick={() => openCloudinaryWidget('image')}> Upload Image </button>
+                {profileData.image && <img src={profileData.image} alt="Profile" className="w-20 h-20 mt-2 rounded-xl" />}
+              </div>
+
+              {/* Curriculum Vitae Upload */}
+              {/* <div className="mb-4">
+                <label className="text-sm font-medium text-gray-700">Curriculum Vitae (CV)</label>
+                <button type="button" className='btn' onClick={() => openCloudinaryWidget('raw')}> Upload CV </button>
+                {profileData.curriculum_vitae && (
+                  <a href={profileData.curriculum_vitae} target="_blank" rel="noopener noreferrer" className='btn btn-secondary'> Download CV </a>
+                )}
+              </div> */}
+            </div>
+          </section>
+
+          {/* Submit Button */}
+          <div className='flex text-center md:items-end justify-center mx-5'>
             <button className='bg-heading px-5 py-2 bg-bg-dark text-sm text-white rounded' type="submit">
               Update Profile
             </button>
           </div>
-        </form> */}
-
-<form onSubmit={handleUpdateProfile}>
-          <div className='mb-4'>
-            <label className="text-sm font-medium text-gray-700">Curriculum Vitae ( CV )</label>
-            <button type="button" className='btn' onClick={() => openCloudinaryWidget('raw')}> Upload CV (PDF) </button>
-            {profileData.curriculum_vitae && (
-              <a href={profileData.curriculum_vitae} target="_blank" rel="noopener noreferrer" className='btn btn-secondary'> Download CV </a>
-            )}
-          </div>
-          <div className="mb-4">
-            <label className="text-sm font-medium text-gray-700">Profile Image</label>
-            <button type="button" className='btn' onClick={() => openCloudinaryWidget('image')}> Upload Image </button>
-            {profileData.image && <img src={profileData.image} alt="Profile" className="w-20 h-20 mt-2 rounded-xl" />}
-          </div>
-          <button className='bg-blue-600 px-5 py-2 text-sm text-white rounded' type="submit">
-            Update Profile
-          </button>
         </form>
       </div>
     </section>

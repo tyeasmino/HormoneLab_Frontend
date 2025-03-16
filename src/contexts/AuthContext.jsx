@@ -1,11 +1,12 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-
+import { useNavigate } from "react-router";
 
 const AuthContext = createContext()
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token')
@@ -53,6 +54,7 @@ const AuthProvider = ({ children }) => {
     const logout = () => {
         setUser(null)
         localStorage.removeItem('token')
+        navigate('/login')
     }
 
     return (

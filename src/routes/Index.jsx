@@ -16,8 +16,8 @@ import Helping from '../components/marketing_execute/Helping'
 
 const Index = () => {
     return (
+        <BrowserRouter>
         <AuthProvider>
-            <BrowserRouter>
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -35,8 +35,8 @@ const Index = () => {
 
                 </Routes>
                 <Footer />
-            </BrowserRouter>
         </AuthProvider>
+            </BrowserRouter>
     )
 }
 

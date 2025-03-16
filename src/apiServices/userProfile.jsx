@@ -5,48 +5,51 @@ const useProfile = (type, userId, token) => {
     const [profileData, setProfileData] = useState({
         user: '',
         image: '',
-        due: '',
-        extra_paid: '',
+        curriculum_vitae: '',
         phone: '',
         location: '',
     });
 
+    const openCloudinaryWidget = (resourceType) => {
+        const widget = window.cloudinary.createUploadWidget(
+            {
+                cloudName: 'dxcwijywg',
+                uploadPreset: 'HormoneLab',
+                resourceType: resourceType,
+                sources: ['local'],
+                multiple: false,
+                maxFiles: 1,
+                folder: 'profile_uploads',
+                clientAllowedFormats: resourceType === 'raw' ? ['pdf'] : ['jpg', 'jpeg', 'png'],
+            },
+            (error, result) => {
+                if (error) {
+                    console.error('Error uploading to Cloudinary:', error);
+                } else if (result.event === 'success') {
+                    const fileUrl = result.info.secure_url;
+                    setProfileData(prev => ({
+                        ...prev,
+                        [resourceType === 'raw' ? 'curriculum_vitae' : 'image']: fileUrl
+                    }));
+                }
+            }
+        );
+        widget.open();
+    };
+
+
     const [locations, setLocations] = useState([]);
 
-    // 🔹 Handle Input Changes (Including Image Upload)
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
-        
+
         if (type === 'file' && files[0]) {
             uploadImage(files[0]);  // Automatically upload the image
         } else {
             setProfileData(prev => ({ ...prev, [name]: value }));
         }
     };
-
-    // 🔹 Upload Image to Cloudinary
-    const uploadImage = async (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "your_upload_preset"); // Replace with your Cloudinary upload preset
-        formData.append("cloud_name", "your_cloud_name"); // Replace with your Cloudinary cloud name
-
-        try {
-            const response = await fetch("https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", {
-                method: "POST",
-                body: formData
-            });
-
-            const data = await response.json();
-            if (data.secure_url) {
-                setProfileData(prev => ({ ...prev, image: data.secure_url })); // Store Cloudinary URL
-            }
-        } catch (error) {
-            console.error("Error uploading image:", error);
-        }
-    };
-
-    // 🔹 Fetch User Profile
+ 
     const fetchProfile = async () => {
         try {
             const endpoint = type === 'me' ? `executives/marketing-executive` : 'fitFinders/fit-finder';
@@ -91,6 +94,8 @@ const useProfile = (type, userId, token) => {
         }
     };
 
+    
+       
     // 🔹 Fetch Locations
     const fetchLocations = async () => {
         try {
