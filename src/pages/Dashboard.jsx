@@ -9,7 +9,7 @@ const Dashboard = () => {
   const { user } = useContext(AuthContext)
 
   return (
-    <section className='flex md:my-40'>
+    <section className=''> {/* flex md:my-10 */}
       <Sidebar />
 
       <section className='max-w-screen-xl m-auto'>
