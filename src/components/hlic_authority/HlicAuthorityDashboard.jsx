@@ -81,7 +81,7 @@ const HlicAuthorityDashboard = () => {
 
   const formattedHospitalData = hospitalAuthorities.map((hospital) => {
     const location = locations.find((loc) => loc.id === hospital.location);
-    const user = users.find((u) => u.id === hospital.user);
+    const user = users.find((u) => u.user_id === hospital.user);
 
     return {
       hospitalName: hospital.hospital_name,
@@ -120,26 +120,6 @@ const HlicAuthorityDashboard = () => {
     { name: "Bashundhara", percentage: 18 },
   ];
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#6a5acd', '#ff6347', '#32cd32'];
-
-
-
-
-  //   const HospitalData = [
-  //   { location: "Savar", hospital: "Savar United Hospital" },
-  //   { location: "Savar", hospital: "Popular General Hospital" },
-  //   { location: "Savar2", hospital: "Lab One Hospital" },
-  //   { location: "Savar2", hospital: "Abul Hossain Hospital" },
-  //   { location: "Gazipur", hospital: "SQR" },
-  //   { location: "Gazipur", hospital: "STAMCH" },
-  //   { location: "Gazipur", hospital: "Modern Sina Hospital" },
-  //   { location: "Mirpur", hospital: "Life Care Hospital" },
-  // ];
-
-
-
-
-
-
 
 
   return (

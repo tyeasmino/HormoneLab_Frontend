@@ -4,6 +4,7 @@ import HospitalAuthorityDashboard from '../components/hospital_authority/Hospita
 import { AuthContext } from '../contexts/AuthContext'
 import HlicAuthorityDashboard from '../components/hlic_authority/HlicAuthorityDashboard'
 import Sidebar from '../components/common/Sidebar'
+import { HlicLabDashboard } from '../components/hlic_authority/HlicLabDashboard'
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext)
@@ -12,15 +13,19 @@ const Dashboard = () => {
     <section className=''> {/* flex md:my-10 */}
       <Sidebar />
 
-      <section className='max-w-screen-xl m-auto'>
-        {(user && user.ha) ?
-          (<> <HospitalAuthorityDashboard /> </>) : (<></>)}
+      <section className='max-w-screen-xl m-auto'> 
+        {/* Render HlicAuthorityDashboard if user is a superuser */}
+        {user?.username === 'hlic.it' && <HlicAuthorityDashboard />}
 
-        {(user && user.me) ?
-          (<> <MarketingExecutiveDashboard /> </>) : (<></>)}
+        {/* Render HlicLabDashboard if the username is 'hlic.histo' */}
+        {user?.username === 'hlic.histo' && <HlicLabDashboard />}
 
-        {(user && !user.ha && !user.me) ?
-          (<> <HlicAuthorityDashboard /> </>) : (<></>)}
+        {/* Render HospitalAuthorityDashboard if user is hospital authority */}
+        {user?.ha && <HospitalAuthorityDashboard />}
+
+        {/* Render MarketingExecutiveDashboard if user is marketing executive */}
+        {user?.me && <MarketingExecutiveDashboard />}
+
       </section>
     </section>
   )
