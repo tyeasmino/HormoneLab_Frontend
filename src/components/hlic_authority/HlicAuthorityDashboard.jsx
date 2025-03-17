@@ -1,19 +1,103 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"; // Only one Tooltip import
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Calendar } from "@/components/ui/calendar";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { FaHospital, FaUsers, FaMapMarkedAlt, FaMoneyBillWave, FaFileInvoice } from "react-icons/fa";
-import { PieChart, Pie, Cell } from "recharts"; // Removed Tooltip here
+import { PieChart, Pie, Cell } from "recharts";
+import { GiDrippingTube } from "react-icons/gi";
+import axios from "axios";
 
 const HlicAuthorityDashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [hospitalAuthorities, setHospitalAuthorities] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [executives, setExecutives] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  const [marketingExecutives, setMarketingExecutives] = useState(0);
+  const [hospitalAuthority, setHospitalAuthority] = useState(0);
+  const [servicesCount, setServicesCount] = useState(0);
+  const [totalDue, setTotalDue] = useState(0);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [locationsRes, executivesRes, usersRes, labServicesRes, hospitalsRes] = await Promise.all([
+          axios.get("https://hormone-lab-backend.vercel.app/clients/all_locations/"),
+          axios.get("https://hormone-lab-backend.vercel.app/executives/all-executives/"),
+          axios.get("https://hormone-lab-backend.vercel.app/accounts/users/"),
+          axios.get("https://hormone-lab-backend.vercel.app/executives/lab-services/"),
+          axios.get("https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/"),
+        ]);
+  
+        setLocations(locationsRes.data || []);
+        setExecutives(executivesRes.data || []);
+        setUsers(usersRes.data || []);
+        setHospitalAuthorities(hospitalsRes.data || []);
+  
+        setServicesCount(labServicesRes.data ? labServicesRes.data.length : 0);
+  
+        // Debugging
+        console.log("Users Data:", usersRes.data);
+        console.log("Hospital Authorities:", hospitalsRes.data);
+  
+        // Count Marketing Executives
+        const executivesCount = usersRes.data ? usersRes.data.filter((user) => user.me !== null).length : 0;
+        setMarketingExecutives(executivesCount);
+  
+        // Count Hospital Authorities
+        const hospitalCount = usersRes.data ? usersRes.data.filter((user) => user.ha !== null).length : 0;
+        setHospitalAuthority(hospitalCount);
+  
+        // Calculate Total Due
+        const total = executivesRes.data ? executivesRes.data.reduce((sum, executive) => sum + (executive.due || 0), 0) : 0;
+        setTotalDue(total);
+  
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error.response ? error.response.data : error.message);
+        setLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+
+  // Dynamically generate location & marketing executives table data
+  const locationData = executives.map((executive) => {
+    const user = users.find((u) => u.user_id === executive.user);
+    const location = locations.find((loc) => loc.id === executive.location);
+
+    return {
+      location: location ? location.location_name : "Unknown",
+      executive: user ? `${user.first_name} ${user.last_name}`.trim() || user.username : "Unknown",
+    };
+  });
+
+
+  const formattedHospitalData = hospitalAuthorities.map((hospital) => {
+    const location = locations.find((loc) => loc.id === hospital.location);
+    const user = users.find((u) => u.id === hospital.user);
+
+    return {
+      hospitalName: hospital.hospital_name,
+      locationName: location ? location.location_name : "Unknown",
+      userName: user ? `${user.first_name} ${user.last_name}`.trim() || user.username : "Unknown",
+    };
+  });
+
+
 
   const analyticsData = [
-    { label: "Total Locations", value: 12, icon: <FaMapMarkedAlt /> },
-    { label: "Total Marketing Executives", value: 8, icon: <FaUsers /> },
-    { label: "Total Hospitals", value: 20, icon: <FaHospital /> },
-    { label: "Total Due", value: "$5,000", icon: <FaMoneyBillWave /> },
+    { label: "Total Locations", value: loading ? "Loading..." : locations.length, icon: <FaMapMarkedAlt /> },
+    { label: "Total Marketing Executives", value: loading ? "Loading..." : marketingExecutives, icon: <FaUsers /> },
+    { label: "Total Hospitals", value: loading ? "Loading..." : hospitalAuthority, icon: <FaHospital /> },
+    { label: "Total Services", value: loading ? "Loading..." : servicesCount, icon: <GiDrippingTube /> },
+    { label: "Total Due", value: loading ? "Loading..." : `${totalDue.toLocaleString()}`, icon: <FaMoneyBillWave /> },
     { label: "Total Reports", value: 120, icon: <FaFileInvoice /> },
     { label: "Due Reports", value: 15, icon: <FaFileInvoice /> },
   ];
@@ -24,24 +108,6 @@ const HlicAuthorityDashboard = () => {
     { month: "Mar", reports: 15 },
     { month: "Apr", reports: 40 },
     { month: "May", reports: 25 },
-  ];
-
-  const locationData = [
-    { location: "Savar", executive: "Rafiq" },
-    { location: "Savar2", executive: "Mostofa" },
-    { location: "Gazipur", executive: "Akter" },
-    { location: "Mirpur", executive: "Maidul" },
-  ];
-
-  const HospitalData = [
-    { location: "Savar", hospital: "Savar United Hospital" },
-    { location: "Savar", hospital: "Popular General Hospital" },
-    { location: "Savar2", hospital: "Lab One Hospital" },
-    { location: "Savar2", hospital: "Abul Hossain Hospital" },
-    { location: "Gazipur", hospital: "SQR" },
-    { location: "Gazipur", hospital: "STAMCH" },
-    { location: "Gazipur", hospital: "Modern Sina Hospital" },
-    { location: "Mirpur", hospital: "Life Care Hospital" },
   ];
 
   const locationPercentageData = [
@@ -55,10 +121,29 @@ const HlicAuthorityDashboard = () => {
   ];
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#6a5acd', '#ff6347', '#32cd32'];
 
+
+
+
+  //   const HospitalData = [
+  //   { location: "Savar", hospital: "Savar United Hospital" },
+  //   { location: "Savar", hospital: "Popular General Hospital" },
+  //   { location: "Savar2", hospital: "Lab One Hospital" },
+  //   { location: "Savar2", hospital: "Abul Hossain Hospital" },
+  //   { location: "Gazipur", hospital: "SQR" },
+  //   { location: "Gazipur", hospital: "STAMCH" },
+  //   { location: "Gazipur", hospital: "Modern Sina Hospital" },
+  //   { location: "Mirpur", hospital: "Life Care Hospital" },
+  // ];
+
+
+
+
+
+
+
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      {/* <h1 className="text-2xl font-bold mb-4">HLIC Authority Dashboard</h1> */}
-
       {/* Analytics Cards */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {analyticsData.map((item, index) => (
@@ -138,23 +223,29 @@ const HlicAuthorityDashboard = () => {
         </Card>
         {/* Location & Executive Table */}
         <Card className="bg-white shadow-md mt-6 p-4">
-          <h2 className="text-lg font-semibold mb-4">Location and Hospitals</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Location</TableHead>
-                <TableHead>Hospitals</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {HospitalData.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell>{row.location}</TableCell>
-                  <TableCell>{row.hospital}</TableCell>
+          <h2 className="text-lg font-semibold mb-4">Hospital Authorities</h2>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Location</TableHead>
+                  <TableHead>Hospital Name</TableHead>
+                  <TableHead>Hospital Authority</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {formattedHospitalData.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{row.locationName}</TableCell>
+                    <TableCell>{row.hospitalName}</TableCell>
+                    <TableCell>{row.userName}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </Card>
       </div>
     </div>
