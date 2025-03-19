@@ -23,9 +23,10 @@ export const HlicLabDashboard = () => {
   const [reportData, setReportData] = useState({
     report_name: "",
     report_file: "",
+    location: "",
     hospital: "",
-
   });
+
 
 
 
@@ -80,44 +81,53 @@ export const HlicLabDashboard = () => {
   // Submit report
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Reset error message
+    setError(null);
 
-    if (!selectedLocation || !selectedHospital || !reportFile) {
-      setError("All fields are required!");
+    if (!reportData.report_file) {
+      setError("Please upload a report file.");
+      return;
+    }
+
+    if (!selectedLocation && !selectedHospital) {
+      setError("Please select at least a location or a hospital.");
+      return;
+    }
+
+    if (!reportData.report_name.trim()) {
+      setError("Please enter a report name.");
       return;
     }
 
     try {
-      const formData = new FormData();
-      // Explicitly set the fields required by the API
-      formData.append("report_name", reportFile.name || ""); // Use the file name as the report name
-      formData.append("report_file", reportFile); // Attach the file
-      formData.append("hospital", selectedHospital); // Selected hospital ID
+      const requestBody = {
+        report_name: reportData.report_name, // Send report name
+        report_file: reportData.report_file,
+      };
 
-      // Log the contents of FormData to console for debugging
-      console.log("FormData being sent:");
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value); // Logs field names and values
-      }
+      if (selectedLocation) requestBody.location = selectedLocation;
+      if (selectedHospital) requestBody.hospital = selectedHospital;
 
-      // Make the POST request
+      console.log("Request Body:", requestBody);
+
       const res = await fetch("https://hormone-lab-backend.vercel.app/clients/reports/", {
         method: "POST",
         headers: {
           Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
         },
-        body: formData,
+        body: JSON.stringify(requestBody),
       });
 
       if (!res.ok) {
-        const errorResponse = await res.text(); // Log server response if it's an error
+        const errorResponse = await res.text();
         console.error("API Response Error:", errorResponse);
         throw new Error("Failed to send the report!");
       }
 
       alert("Report Sent Successfully!");
-      setReportFile(null);
-      // Optionally call fetchReports() if it's implemented
+      setReportData({ report_name: "", report_file: "" }); // Reset name & file
+      setSelectedLocation(null);
+      setSelectedHospital(null);
     } catch (err) {
       console.error(err.message);
       setError(err.message || "Failed to send the report!");
@@ -125,33 +135,37 @@ export const HlicLabDashboard = () => {
   };
 
 
-  const openCloudinaryWidget = (resourceType) => {
+
+
+
+  const openCloudinaryWidget = () => {
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: 'dxcwijywg',
         uploadPreset: 'HormoneLab',
-        resourceType: resourceType, // 'image' for images, 'raw' for PDFs
+        resourceType: 'raw', // 'raw' allows PDF uploads
         sources: ['local'],
         multiple: false,
         maxFiles: 1,
-        folder: 'uploads', // Separate folder for uploads
-        clientAllowedFormats: resourceType === 'raw' ? ['pdf'] : ['jpg', 'jpeg', 'png'],
+        folder: 'uploads',
+        clientAllowedFormats: ['pdf'],
       },
       (error, result) => {
         if (error) {
           console.error('Error uploading to Cloudinary:', error);
           alert('File upload failed. Please try again.');
         } else if (result.event === 'success') {
-          const fileUrl = result.info.secure_url; // URL of uploaded file
+          console.log('Uploaded PDF:', result.info.secure_url);
           setReportData((prev) => ({
             ...prev,
-            [resourceType === 'raw' ? 'report_file' : 'image']: fileUrl, // Update the correct field
+            report_file: result.info.secure_url, // Save Cloudinary URL
           }));
         }
       }
     );
     widget.open();
   };
+
 
 
 
@@ -169,6 +183,16 @@ export const HlicLabDashboard = () => {
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Report Name Input */}
+          <Input
+            type="text"
+            placeholder="Enter report name"
+            value={reportData.report_name}
+            onChange={(e) => setReportData((prev) => ({ ...prev, report_name: e.target.value }))}
+            className="w-full border p-2 rounded-md"
+          />
+
+
 
           <div className="flex gap-5">
             {/* Location Selection */}
@@ -226,20 +250,20 @@ export const HlicLabDashboard = () => {
 
 
           {/* File Upload */}
-          <label className="flex items-center space-x-2 bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300">
+          <label onClick={() => openCloudinaryWidget('raw')} className="flex items-center space-x-2 bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300">
             <UploadCloud className="w-5 h-5 text-gray-600" />
-            <span>{reportFile ? reportFile.name : "Upload Report (PDF)"}</span>
-            <Input type="file" className="hidden" onChange={handleFileChange} />
+            <span >{reportFile ? reportFile.name : "Upload Report (PDF)"}</span>
+            {/* <Input type="file" className="hidden" onChange={handleFileChange} /> */}
           </label>
 
 
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <button
               type="button"
-              className="bg-bg-dark text-sm px-3 py-1 rounded-md text-white"
+              className="flex items-center space-x-2 bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300"
               onClick={() => openCloudinaryWidget('raw')} // Trigger Cloudinary widget for PDF upload
             >
-              Upload Report File (PDF)
+              <UploadCloud className="w-5 h-5 text-gray-600" /> Upload Report File (PDF)
             </button>
             {reportData.report_file && (
               <a
@@ -251,7 +275,7 @@ export const HlicLabDashboard = () => {
                 View Uploaded PDF
               </a>
             )}
-          </div>
+          </div> */}
 
 
           {/* Submit Button */}
