@@ -1,19 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react'
-import hlicLogo from '../../assets/hlicLogo.jpg'
-import { Link, useLocation } from 'react-router'
+import React, { useContext, useEffect, useState } from 'react';
+import hlicLogo from '../../assets/hlicLogo.jpg';
+import { Link, useLocation } from 'react-router';
 import { MdOutlineLightMode } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
 import { AuthContext } from '../../contexts/AuthContext';
 import { LiaUserEditSolid } from 'react-icons/lia';
 
-
 const Navbar = () => {
-    const { user, logout } = useContext(AuthContext)
+    const { user, logout } = useContext(AuthContext);
     const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")) || false);
     const [profileData, setProfileData] = useState({ image: '', balance: null });
-    const location = useLocation(); 
+    const location = useLocation();
     const token = localStorage.getItem('token');
-
 
     useEffect(() => {
         localStorage.setItem("darkMode", JSON.stringify(darkMode));
@@ -25,10 +23,8 @@ const Navbar = () => {
         }
     }, [darkMode]);
 
-
     const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile'
-    || location.pathname === '/reports' || location.pathname === '/deposites';
-
+        || location.pathname === '/reports' || location.pathname === '/deposites';
 
     return (
         <section className='max-w-screen-xl mx-auto'>
@@ -51,7 +47,9 @@ const Navbar = () => {
                         </div>
                         <ul
                             tabIndex={0}
-                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-64 p-2 shadow">
+                            className={`menu menu-sm dropdown-content rounded-box z-[1] mt-3 w-64 p-2 shadow ${darkMode ? 'bg-black text-white' : 'bg-white text-black'
+                                }`}
+                        >
                             <li><a>Home</a></li>
                             <li>
                                 <a>Care at Hormone Lab</a>
@@ -60,7 +58,7 @@ const Navbar = () => {
                                     <li><a>FNA & Paps Collection</a></li>
                                     <li><a>Appointment</a></li>
                                     <li><a>Doctor & Medical Stuff</a></li>
-                                    <li> <Link to='/services'>Lab Services</Link></li>
+                                    <li><Link to='/services'>Lab Services</Link></li>
                                     <li><a>Report Panel</a></li>
                                 </ul>
                             </li>
@@ -89,7 +87,10 @@ const Navbar = () => {
                         <li>
                             <details>
                                 <summary>Care at Hormone Lab</summary>
-                                <ul className="z-10 absolute top-10 p-2 w-[190px]">
+                                <ul
+                                    className={`z-10 absolute top-10 p-2 w-[190px] shadow  ${darkMode ? "bg-black text-white" : "bg-white text-black"
+                                        }`}
+                                >
                                     <li><a>Home Collection</a></li>
                                     <li><a>FNA & Paps Collection</a></li>
                                     <li><a>Appointment</a></li>
@@ -102,7 +103,10 @@ const Navbar = () => {
                         <li>
                             <details>
                                 <summary>Departments</summary>
-                                <ul className="p-2 z-20 top-10 left-5">
+                                <ul
+                                    className={`p-2 z-20 top-10 left-5 shadow ${darkMode ? "bg-black text-white" : "bg-white text-black"
+                                        }`}
+                                >
                                     <li><a>Biochemistry</a></li>
                                     <li><a>Microbiology</a></li>
                                     <li><a>Immunology</a></li>
@@ -141,14 +145,12 @@ const Navbar = () => {
                                         </div>
                                     </div>
 
-                                    <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                                       
-                                        
-                                           <li>
+                                    <ul tabIndex={0} className={`menu menu-sm dropdown-content rounded-box z-[1] mt-3 w-52 p-2 shadow ${darkMode ? 'bg-black text-white' : 'bg-white text-black'
+                                        }`}
+                                    >
+                                        <li>
                                             <button disabled>{user.first_name} {user.last_name}</button>
                                         </li>
-
-                                        {/* Conditionally render profile-related links */}
                                         {!isOnProtectedPage && (
                                             <>
                                                 <li>
@@ -156,19 +158,19 @@ const Navbar = () => {
                                                 </li>
                                             </>
                                         )}
-
-                                        {/* Logout button is always visible */}
                                         <li>
                                             <button onClick={logout}>Logout</button>
                                         </li>
-                                        
                                     </ul>
-                                </>) : (<>
+                                </>
+                            ) : (
+                                <>
                                     <div className="flex gap-2">
                                         <Link to='/login' className="px-6 py-1 rounded bg-green-400">Login</Link>
                                         <Link to='/register' className="px-6 py-1 rounded bg-blue-400">Register</Link>
                                     </div>
-                                </>)}
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -177,4 +179,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default Navbar;

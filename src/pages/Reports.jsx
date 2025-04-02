@@ -4,6 +4,7 @@ import Sidebar from '../components/common/Sidebar'
 import HospitalAuthorityReports from '../components/hospital_authority/HospitalAuthorityReports'
 import MarketingExecutiveReports from '../components/marketing_execute/MarketingExecutiveReports' 
 import { HlicLabDashboard } from '../components/hlic_authority/HlicLabDashboard'
+import ReportList from '../components/common/ReportList'
 
 
 const Reports = () => {
@@ -14,7 +15,7 @@ const Reports = () => {
             <Sidebar />
 
             <section className='max-w-screen-xl m-auto'>
-                {user?.username === 'hlic.histo' && <HlicLabDashboard />}
+                {user?.username === 'hlic.histo' && <ReportList />}
                 {(user && user.ha) ? (<> <HospitalAuthorityReports /> </>) : (<></>)}
                 {(user && user.me) ? (<> <MarketingExecutiveReports /> </>) : (<></>)}
             </section>

@@ -285,7 +285,7 @@ export const HlicLabDashboard = () => {
         </form>
       </motion.div>
 
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -295,8 +295,9 @@ export const HlicLabDashboard = () => {
 
         <div className="overflow-x-auto bg-white shadow-md rounded-lg">
           <ReportList />
-        </div>
-      </motion.div>
+          </div>
+          </motion.div> */}
+          <ReportList />
     </div>
   );
 };
