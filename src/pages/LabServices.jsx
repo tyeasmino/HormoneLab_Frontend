@@ -17,20 +17,80 @@ const LabServices = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const testsPerPage = 10;
 
+    // useEffect(() => {
+    //     const fetchLabServices = async () => {
+    //         try {
+    //             const response = await axios.get(
+    //                 `https://hormone-lab-backend.vercel.app/executives/lab-services/`,
+    //                 {
+    //                     headers: token ? { Authorization: `Token ${token}` } : {},
+    //                 }
+    //             );
+
+    //             if (response.status === 200 && Array.isArray(response.data)) {
+    //                 setLabServices(response.data);
+    //             } else {
+    //                 setLabServices([]);
+    //             }
+    //         } catch (err) {
+    //             setError("Failed to fetch lab services");
+    //         } finally {
+    //             setIsLoading(false);
+    //         }
+    //     };
+
+    //     fetchLabServices();
+    // }, [token]);
+
     useEffect(() => {
         const fetchLabServices = async () => {
-            try {
-                const response = await axios.get(
-                    `https://hormone-lab-backend.vercel.app/executives/lab-services/`,
-                    {
-                        headers: token ? { Authorization: `Token ${token}` } : {},
-                    }
-                );
+            setIsLoading(true);
+            setError(null);
 
-                if (response.status === 200 && Array.isArray(response.data)) {
-                    setLabServices(response.data);
+            try {
+                if (!user || !token) {
+                    // If user is not logged in, fetch general lab services
+                    const response = await axios.get(
+                        `https://hormone-lab-backend.vercel.app/executives/lab-services/`
+                    );
+
+                    console.log("using lab-services");
+                    if (response.status === 200 && Array.isArray(response.data)) {
+                        setLabServices(response.data);
+                    } else {
+                        setLabServices([]);
+                    }
+                    return;
+                }
+
+
+                if (user.me) {
+                    // User is a Marketing Executive, fetch location-based rates
+                    const locationRateResponse = await axios.get(
+                        `https://hormone-lab-backend.vercel.app/executives/location-rate/`,
+                        {
+                            headers: { Authorization: `Token ${token}` },
+                        }
+                    );
+
+                    console.log("using location-rate");
+
+                    if (locationRateResponse.status === 200 && Array.isArray(locationRateResponse.data)) {
+                        setLabServices(locationRateResponse.data);
+                    } else {
+                        setLabServices([]);
+                    }
                 } else {
-                    setLabServices([]);
+                    // User is NOT a Marketing Executive, fetch general lab services
+                    const response = await axios.get(
+                        `https://hormone-lab-backend.vercel.app/executives/lab-services/`
+                    );
+
+                    if (response.status === 200 && Array.isArray(response.data)) {
+                        setLabServices(response.data);
+                    } else {
+                        setLabServices([]);
+                    }
                 }
             } catch (err) {
                 setError("Failed to fetch lab services");
@@ -40,7 +100,8 @@ const LabServices = () => {
         };
 
         fetchLabServices();
-    }, [token]);
+    }, [token, user]);
+
 
     // Search logic (apply filtering first)
     const filteredTests = labServices.filter(
@@ -93,13 +154,20 @@ const LabServices = () => {
                     <table className="w-full text-left border-collapse border border-gray-200">
                         <thead>
                             <tr className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
-                                <th className="px-4 py-2 md:text-lg font-semibold hidden md:table-cell ">Test Category</th>
+                                <th className="px-4 py-2 md:text-lg font-semibold hidden md:table-cell">Test Category</th>
                                 <th className="px-4 py-2 md:text-lg font-semibold">Test Name</th>
-                                <th className="px-4 py-2 md:text-lg font-semibold flex items-center">Rate</th>
-                                <th className="px-4 py-2 md:text-lg font-semibold  hidden md:table-cell">Sample</th>
-                                <th className="px-4 py-2 md:text-lg font-semibold  hidden md:table-cell">Reporting</th>
+                                <th className="px-4 py-2 md:text-lg font-semibold">Rate</th>
+
+                                {/* Conditionally add Location Rate column, but keep it inside the same row */}
+                                {user && user.me && (
+                                    <th className="px-4 py-2 md:text-lg font-semibold">Location Rate</th>
+                                )}
+
+                                <th className="px-4 py-2 md:text-lg font-semibold hidden md:table-cell">Sample</th>
+                                <th className="px-4 py-2 md:text-lg font-semibold hidden md:table-cell">Reporting</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {currentTests.map((service, index) => (
                                 <tr
@@ -122,6 +190,11 @@ const LabServices = () => {
                                     <td className="px-4 py-2 text-green-700 font-semibold border-b">
                                         {service.patient_rate}
                                     </td>
+                                    {(user && user.me) &&
+                                        <td className="px-4 py-2 text-green-700 font-semibold border-b">
+                                            {service.rate}
+                                        </td>
+                                    }
                                     <td className="px-4 py-2 text-gray-700 border-b  hidden md:table-cell">{service.test_sample}</td>
                                     <td className="px-4 py-2 text-gray-700 border-b  hidden md:table-cell">{service.test_reporting}</td>
                                 </tr>
@@ -130,7 +203,7 @@ const LabServices = () => {
                     </table>
                 </div>
             )}
- 
+
             {/* Pagination */}
             {filteredTests.length > testsPerPage && (
                 <div className="mt-6 flex justify-center items-center space-x-2 flex-wrap">
@@ -149,8 +222,8 @@ const LabServices = () => {
                             <button
                                 key={i}
                                 className={`px-3 py-1 md:px-4 md:py-2 border rounded-lg text-sm md:text-base ${currentPage === i + 1
-                                        ? "bg-gray-900 text-white"
-                                        : "hover:bg-gray-200"
+                                    ? "bg-gray-900 text-white"
+                                    : "hover:bg-gray-200"
                                     }`}
                                 onClick={() => setCurrentPage(i + 1)}
                             >
