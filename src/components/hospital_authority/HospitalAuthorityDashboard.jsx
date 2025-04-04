@@ -1,8 +1,11 @@
 import React from 'react'
+import TodaysReportList from '../common/TodaysReportList'
 
 const HospitalAuthorityDashboard = () => {
   return (
-    <div>HospitalAuthorityDashboard</div>
+    <section className='md:my-20'>
+       <TodaysReportList />
+    </section>
   )
 }
 

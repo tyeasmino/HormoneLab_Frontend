@@ -1,27 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Download } from "lucide-react";
 import Loading from "./Loading";
-import { motion } from "framer-motion";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { motion } from "framer-motion"; 
+import { AuthContext } from "../../contexts/AuthContext";
 
-const ReportList = () => {
+const TodaysReportList = () => {
+  const { user } = useContext(AuthContext);
   const token = localStorage.getItem("token");
   const [reports, setReports] = useState([]);
-  const [filteredReports, setFilteredReports] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
-  const [minDate, setMinDate] = useState(null);
-  const [maxDate, setMaxDate] = useState(new Date());  
+
 
   useEffect(() => {
     const fetchReports = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("https://hormone-lab-backend.vercel.app/clients/reports/", {
+        const res = await axios.get("https://hormone-lab-backend.vercel.app/clients/user-reports/today/", {
           headers: { Authorization: `Token ${token}` },
         });
 
@@ -81,53 +77,6 @@ const ReportList = () => {
     });
   };
 
-  // Handle month change
-  const handleMonthChange = (date) => {
-    setSelectedMonth(date);
-    setSelectedDate(null); // Reset selected date when month changes
-
-    const today = new Date();
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-    // If selected month is current month, limit max date to today
-    if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth()) {
-      lastDay = today;
-    }
-
-    setMinDate(firstDay);
-    setMaxDate(lastDay);
-  };
-
-  // Handle date change
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  // Filter reports based on selected month and date
-  useEffect(() => {
-    const today = new Date();
-    const selectedYear = selectedMonth.getFullYear();
-    const selectedMonthNum = selectedMonth.getMonth() + 1;
-
-    const filtered = reports.filter((report) => {
-      const reportDate = new Date(report.created_at);
-      const reportYear = reportDate.getFullYear();
-      const reportMonth = reportDate.getMonth() + 1;
-      const reportDay = reportDate.getDate();
-
-      if (reportYear === selectedYear && reportMonth === selectedMonthNum) {
-        if (selectedDate) {
-          return reportDay === selectedDate.getDate();
-        }
-        return reportDay <= today.getDate() || reportMonth < today.getMonth() + 1;
-      }
-      return false;
-    });
-
-    setFilteredReports(filtered);
-  }, [selectedMonth, selectedDate, reports]);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -135,40 +84,15 @@ const ReportList = () => {
       transition={{ duration: 0.5, delay: 0.2 }}
       className="max-w-5xl mx-auto mt-8"
     >
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">📜 Sent Reports</h2>
-
-      {/* Date & Month Picker */}
-      <div className="flex items-center gap-4 mb-4">
-        {/* Month Picker */}
-        <DatePicker
-          selected={selectedMonth}
-          onChange={handleMonthChange}
-          dateFormat="MMMM yyyy"
-          showMonthYearPicker
-          maxDate={new Date()}
-          className="p-2 border bg-transparent rounded-md"
-        />
-
-        {/* Day Picker - Limited to selected month */}
-        <DatePicker
-          selected={selectedDate}
-          onChange={handleDateChange}
-          dateFormat="dd MMMM yyyy"
-          minDate={minDate}
-          maxDate={maxDate}
-          className="p-2 border bg-transparent rounded-md"
-          placeholderText="Select a specific date"
-        />
-      </div>
+      <h2 className="text-xl font-semibold text-gray-700 mb-4">📜 Today's Reports</h2>
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <Table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
           <TableHeader>
             <TableRow className="bg-gray-100">
               <TableHead>Date</TableHead>
-              <TableHead>Report Name</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Hospital</TableHead>
+              <TableHead>Report Name</TableHead> 
+              {user.me && <TableHead>Hospital</TableHead>}
               <TableHead>Download</TableHead>
             </TableRow>
           </TableHeader>
@@ -179,8 +103,8 @@ const ReportList = () => {
                   <Loading />
                 </TableCell>
               </TableRow>
-            ) : filteredReports.length > 0 ? (
-              filteredReports.map((report) => (
+            ) : reports.length > 0 ? (
+              reports.map((report) => (
                 <motion.tr
                   key={report.id}
                   className="border-b hover:bg-gray-50"
@@ -189,9 +113,8 @@ const ReportList = () => {
                   transition={{ duration: 0.3 }}
                 >
                   <TableCell>{formatDate(report.created_at)}</TableCell>
-                  <TableCell>{report.report_name || ""}</TableCell>
-                  <TableCell>{report.location_name || ""}</TableCell>
-                  <TableCell>{report.hospital_name || ""}</TableCell>
+                  <TableCell>{report.report_name || ""}</TableCell> 
+                  {user.me && <TableCell>{report.hospital_name || ""}</TableCell> }
                   <TableCell className="text-center">
                     <a
                       href={report.report_file}
@@ -219,4 +142,4 @@ const ReportList = () => {
   );
 };
 
-export default ReportList;
+export default TodaysReportList;

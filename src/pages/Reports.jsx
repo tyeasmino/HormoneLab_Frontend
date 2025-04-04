@@ -14,9 +14,9 @@ const Reports = () => {
         <section className='flex my-10'>
             <Sidebar />
 
-            <section className='max-w-screen-xl m-auto'>
+            <section className='max-w-5xl mx-auto mt-8'>
                 {user?.username === 'hlic.histo' && <ReportList />}
-                {(user && user.ha) ? (<> <HospitalAuthorityReports /> </>) : (<></>)}
+                {(user && user.ha) ? (<> <MarketingExecutiveReports /> </>) : (<></>)}
                 {(user && user.me) ? (<> <MarketingExecutiveReports /> </>) : (<></>)}
             </section>
         </section>

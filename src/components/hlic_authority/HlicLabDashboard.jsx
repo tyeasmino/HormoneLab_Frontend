@@ -5,9 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { UploadCloud, FileText } from "lucide-react";
-
-import ReportList from "../common/ReportList";
-import { SelectContent } from "@radix-ui/react-select";
+import { SelectContent } from "@radix-ui/react-select"; 
+import HlicTodayReportList from "./HlicTodayReportList";
 
 export const HlicLabDashboard = () => {
   const token = localStorage.getItem('token');
@@ -26,11 +25,6 @@ export const HlicLabDashboard = () => {
     location: "",
     hospital: "",
   });
-
-
-
-
-
 
   // Fetch locations on mount
   useEffect(() => {
@@ -54,7 +48,14 @@ export const HlicLabDashboard = () => {
     setSelectedLocation(locationId);
     setSelectedHospital(null); // Reset hospital selection
     try {
-      const res = await fetch(`https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/by_location/?location_id=${locationId}`);
+      const res = await fetch(`https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/by_location/?location_id=${locationId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    
       if (!res.ok) throw new Error("Failed to fetch hospitals.");
       const data = await res.json();
       setHospitals(data);
@@ -108,7 +109,6 @@ export const HlicLabDashboard = () => {
       if (selectedHospital) requestBody.hospital = selectedHospital;
 
       console.log("Request Body:", requestBody);
-
       const res = await fetch("https://hormone-lab-backend.vercel.app/clients/reports/", {
         method: "POST",
         headers: {
@@ -297,7 +297,9 @@ export const HlicLabDashboard = () => {
           <ReportList />
           </div>
           </motion.div> */}
-          <ReportList />
+          {/* <ReportList /> */}
+
+          <HlicTodayReportList />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Download } from "lucide-react";
@@ -6,8 +6,11 @@ import Loading from "../common/Loading";
 import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const MarketingExecutiveReports = () => {
+  const { user } = useContext(AuthContext)
+
   const token = localStorage.getItem("token");
   const [reports, setReports] = useState([]);
   const [filteredReports, setFilteredReports] = useState([]);
@@ -21,7 +24,7 @@ const MarketingExecutiveReports = () => {
     const fetchReports = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("http://127.0.0.1:8000/clients/reports/my_reports/", {
+        const res = await axios.get("https://hormone-lab-backend.vercel.app/clients/user-reports/", {
           headers: { Authorization: `Token ${token}` },
         });
 
@@ -33,7 +36,9 @@ const MarketingExecutiveReports = () => {
             if (report.hospital) {
               try {
                 const hospitalRes = await axios.get(
-                 `https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/${report.hospital}/`
+                 `https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/${report.hospital}/`, {
+                  headers: { Authorization: `Token ${token}` },
+                 }
                 );
                 hospitalName = hospitalRes.data.hospital_name || "";
               } catch (error) {
@@ -150,7 +155,8 @@ const MarketingExecutiveReports = () => {
             <TableRow className="bg-gray-100">
               <TableHead>Date</TableHead>
               <TableHead>Report Name</TableHead>
-              <TableHead>Hospital</TableHead>
+              {user.me &&  <TableHead>Hospital</TableHead>}
+              
               <TableHead>Download</TableHead>
             </TableRow>
           </TableHeader>
@@ -172,7 +178,8 @@ const MarketingExecutiveReports = () => {
                 >
                   <TableCell>{formatDate(report.created_at)}</TableCell>
                   <TableCell>{report.report_name || "No Name"}</TableCell>
-                  <TableCell>{report.hospital_name}</TableCell>
+                  {user.me && <TableCell>{report.hospital_name}</TableCell>}
+                  
                   <TableCell className="text-center">
                     <a
                       href={report.report_file}

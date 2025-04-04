@@ -11,7 +11,7 @@ const MarketingExecutiveHospitalList = () => {
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(
-          "http://127.0.0.1:8000/hospitals/hospital_authorities/under_me/",
+          "https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/under_me/",
           { headers: { Authorization: `Token ${token}` } }
         );
         setHospitals(res.data);
