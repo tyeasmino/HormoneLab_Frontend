@@ -1,58 +1,59 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import useProfile from '../../apiServices/userProfile'; // Make sure the hook is used
 import axios from 'axios';
+import { toast } from 'react-hot-toast'; // Import toast
 
 const MarketingExecutiveProfile = () => {
   const { user } = useContext(AuthContext);
   const token = localStorage.getItem('token');
 
   const [profileData, setProfileData] = useState({
-    image: "",
-    due: "",
-    extra_paid: "",
-    phone: "",
-    user: "",
-    location: "",
+    image: '',
+    due: '',
+    extra_paid: '',
+    phone: '',
+    user: '',
+    location: '',
   });
 
+  const [formData, setFormData] = useState({ ...profileData });
+  const [locations, setLocations] = useState([]);
+  const [isLocationSet, setIsLocationSet] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
     if (e.target.multiple) {
       const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
-      setProfileData({
-        ...profileData,
+      setFormData({
+        ...formData,
         [name]: selectedValues,
       });
     } else if (files && files[0]) {
       const file = files[0];
 
-      // For image uploads (e.g., profile image or CV)
-      if (name === "image") {
+      if (name === 'image') {
         openCloudinaryWidget(file);
-      } else if (name === "cv") {
-        setProfileData({
-          ...profileData,
+      } else if (name === 'cv') {
+        setFormData({
+          ...formData,
           [name]: file,
         });
       }
     } else {
-      setProfileData({
-        ...profileData,
+      setFormData({
+        ...formData,
         [name]: value,
       });
     }
   };
-
 
   const openCloudinaryWidget = (resourceType) => {
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: 'dxcwijywg',
         uploadPreset: 'HormoneLab',
-        resourceType: resourceType,
+        resourceType,
         sources: ['local'],
         multiple: false,
         maxFiles: 1,
@@ -61,12 +62,12 @@ const MarketingExecutiveProfile = () => {
       },
       (error, result) => {
         if (error) {
-          console.error('Error uploading to Cloudinary:', error);
+          console.error('Cloudinary upload error:', error);
         } else if (result.event === 'success') {
           const fileUrl = result.info.secure_url;
-          setProfileData(prev => ({
+          setFormData((prev) => ({
             ...prev,
-            [resourceType === 'raw' ? 'curriculum_vitae' : 'image']: fileUrl
+            [resourceType === 'raw' ? 'curriculum_vitae' : 'image']: fileUrl,
           }));
         }
       }
@@ -74,146 +75,97 @@ const MarketingExecutiveProfile = () => {
     widget.open();
   };
 
-
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}`,
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
-
-        if (res.data) {
-          setProfileData((prevData) => ({
-            ...prevData,
-            specialization: res.data.specialization || [],
-            ...res.data,
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching profile: ", error);
-      }
-    };
-
-    if (user) {
-      fetchProfile();
-    }
-  }, [user]);
-
-  const handleUpdateProfile = async (e) => {
-    e.preventDefault();
-
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      alert("You are not logged in.");
-      return;
-    }
-
-
-    let profileImageUrl = profileData.image;
-    if (profileData.image instanceof File) {
-      profileImageUrl = await uploadToCloudinary(profileData.image);
-    }
-
-    const updatedProfileData = {
-      ...profileData,
-      image: profileImageUrl || profileData.image,
-    };
-
-    try {
-      const res = await axios.put(
-        `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}/`,
-        updatedProfileData,
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-
-      if (res.status === 200) {
-        alert("Profile updated successfully.");
-        setProfileData((prevData) => ({
-          ...prevData,
-          ...updatedProfileData,
-        }));
-      } else {
-        console.log("Profile update failed.");
-      }
-    } catch (error) {
-      console.error("Error during the profile update:", error);
-    }
-  };
-  const [locations, setLocations] = useState([]);
-  const [isLocationSet, setIsLocationSet] = useState(false);
-
-  // 🔹 Fetch Locations
   const fetchLocations = async () => {
     try {
-      const endpoint = profileData.location ? 
-        'https://hormone-lab-backend.vercel.app/clients/all_locations/' : 
-        'https://hormone-lab-backend.vercel.app/clients/locations/';
-      
+      const endpoint = formData.location
+        ? 'https://hormone-lab-backend.vercel.app/clients/all_locations/'
+        : 'https://hormone-lab-backend.vercel.app/clients/locations/';
       const res = await axios.get(endpoint);
       setLocations(res.data);
     } catch (error) {
       console.error('Error fetching locations:', error);
+      toast.error("Error fetching locations");
     }
   };
 
-
   const fetchProfile = async () => {
     try {
-      // const endpoint = type === 'me' ? `executives/marketing-executive` : 'fitFinders/fit-finder';
-      // const userId = type === 'md' ? {user.me} : {user.ha}
       const res = await axios.get(
         `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}/`,
         { headers: { Authorization: `Token ${token}` } }
       );
 
       if (res.data) {
-        setProfileData(prev => ({ ...prev, ...res.data }));
-      }
-      if (res.data.location) {
-        setIsLocationSet(true);  // Mark location as set if it exists
+        setProfileData((prev) => ({
+          ...prev,
+          specialization: res.data.specialization || [],
+          ...res.data,
+        }));
+        setFormData((prev) => ({
+          ...prev,
+          ...res.data,
+        }));
+
+        if (res.data.location) {
+          setIsLocationSet(true);
+        }
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
+      toast.error("Error fetching profile");
+    }
+  };
+
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+
+    const updatedProfileData = {
+      ...formData,
+      image: formData.image,
+    };
+
+    try {
+      const res = await axios.put(
+        `https://hormone-lab-backend.vercel.app/executives/marketing-executive/${user.me}/`,
+        updatedProfileData,
+        { headers: { Authorization: `Token ${token}` } }
+      );
+
+      if (res.status === 200) {
+        toast.success('Profile updated successfully.'); // Show success toast
+        setProfileData((prevData) => ({ ...prevData, ...updatedProfileData }));
+      } else {
+        toast.error('Profile update failed.'); // Show error toast if update fails
+      }
+    } catch (error) {
+      console.error('Error during profile update:', error);
+      toast.error('Error during profile update'); // Show error toast
     }
   };
 
   useEffect(() => {
     fetchLocations();
-    if (user.me) {
+    if (user) {
       fetchProfile();
     }
-  }, [user.me, profileData.location]);
-  
+  }, [user]);
 
   return (
     <section className='w-[500px] m-auto shadow p-5'>
       <div className='flex flex-col gap-5 relative'>
         <div>
           <h2 className='md:text-3xl font-bold text-center'>Update Your Profile</h2>
-          <p className=' text-center'>Ensure your profile is updated to get orders</p>
+          <p className='text-center'>Ensure your profile is updated to get orders</p>
         </div>
 
         <form onSubmit={handleUpdateProfile}>
           <section className='flex gap-5'>
             <div className='w-2/3'>
-              {/* Location Field */}
               <div className='flex flex-col mb-5'>
                 <label className='font-semibold text-sm' htmlFor="location">Location</label>
                 <select
                   name="location"
-                  value={profileData.location}
+                  value={formData.location || ""}
                   onChange={handleChange}
                   disabled={isLocationSet}
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-heading focus:outline-none focus:ring-0 focus:border-heading peer"
@@ -229,16 +181,14 @@ const MarketingExecutiveProfile = () => {
                 {isLocationSet && (
                   <p className="mt-2 text-sm text-gray-400">Location cannot be changed.</p>
                 )}
-
               </div>
 
-              {/* Phone Field */}
               <div className='flex w-full flex-col mb-5'>
                 <label className='font-semibold text-sm' htmlFor="phone">Phone</label>
                 <input
                   type="tel"
                   name="phone"
-                  value={profileData.phone}
+                  value={formData.phone}
                   onChange={handleChange}
                   placeholder="Phone"
                   className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-heading focus:outline-none focus:ring-0 focus:border-heading peer'
@@ -247,25 +197,13 @@ const MarketingExecutiveProfile = () => {
             </div>
 
             <div className='w-1/3'>
-              {/* Profile Image Upload */}
               <div className="mb-4">
-
                 <button type="button" className='bg-bg-dark text-sm px-3 py-1 rounded-md text-white' onClick={() => openCloudinaryWidget('image')}> Upload Image </button>
-                {profileData.image && <img src={profileData.image} alt="Profile" className="w-20 h-20 mt-2 rounded-xl" />}
+                {formData.image && <img src={formData.image} alt="Profile" className="w-20 h-20 mt-2 rounded-xl" />}
               </div>
-
-              {/* Curriculum Vitae Upload */}
-              {/* <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700">Curriculum Vitae (CV)</label>
-                <button type="button" className='btn' onClick={() => openCloudinaryWidget('raw')}> Upload CV </button>
-                {profileData.curriculum_vitae && (
-                  <a href={profileData.curriculum_vitae} target="_blank" rel="noopener noreferrer" className='btn btn-secondary'> Download CV </a>
-                )}
-              </div> */}
             </div>
           </section>
 
-          {/* Submit Button */}
           <div className='flex text-center md:items-end justify-center mx-5'>
             <button className='bg-heading px-5 py-2 bg-bg-dark text-sm text-white rounded' type="submit">
               Update Profile
