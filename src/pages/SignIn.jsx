@@ -42,23 +42,23 @@ const SignIn = () => {
         }
       )
 
-      if(res.status === 200 && !res.data.error) {
+      if (res.status === 200 && !res.data.error) {
         setSuccessTitle("Success")
         setSuccessMessage("Login Successful!!!")
 
         localStorage.setItem('token', res.data.token)
         const loginSuccess = await login(formData)
-        if(loginSuccess) {
+        if (loginSuccess) {
           navigate('/dashboard')
         }
 
         setFormData({
           username: "",
           password: "",
-        })      
+        })
       } else {
         setSuccessTitle("Failed")
-        setSuccessMessage("An error occured. Please try again")  
+        setSuccessMessage("An error occured. Please try again")
       }
     } catch (error) {
       setSuccessTitle("Failed")
@@ -108,9 +108,9 @@ const SignIn = () => {
               <Link to='' className='text-sm text-red-500'>Forgot Password?</Link>
             </div>
 
-            <div className='bg-blue-500 py-2 my-5 rounded text-center text-white font-semibold'>
-              <button type='submit'>Sign In</button>
-            </div>
+            <button type='submit' className='bg-blue-500 py-2 w-full my-5 rounded text-center text-white font-semibold'>
+                Sign In          
+            </button>
           </form>
           <div className="divider">OR</div>
 
@@ -122,18 +122,18 @@ const SignIn = () => {
           <div className='text-center my-5'>
             <Link to='/register'>Don't you have an account? <span className='font-semibold text-blue-500'>Sign up</span></Link>
           </div>
-        {successMessage && (
+          {successMessage && (
             <div
-                className="bg-green-500 text-white rounded-lg mt-5 p-3 text-center shadow-md transform transition-all duration-300 ease-in-out"
-                role="alert"
+              className="bg-green-500 text-white rounded-lg mt-5 p-3 text-center shadow-md transform transition-all duration-300 ease-in-out"
+              role="alert"
             >
-                <p className="font-bold">{successTitle}</p>
-                <p>{successMessage}</p>
+              <p className="font-bold">{successTitle}</p>
+              <p>{successMessage}</p>
             </div>
-        )}
+          )}
         </div>
 
-        
+
       </section>
     </section>
   )

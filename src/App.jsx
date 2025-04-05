@@ -8,7 +8,7 @@ import { Toaster } from 'react-hot-toast';
 function App() {
 
   return (
-    <div className=' dark:bg-slate-900  dark:text-white'>
+    <div className=' dark:bg-gray-900  dark:text-white'>
       <Index />
       <Toaster position="top-right" reverseOrder={false} />
     </div>

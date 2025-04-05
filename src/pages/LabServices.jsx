@@ -155,12 +155,12 @@ const LabServices = () => {
                         <thead>
                             <tr className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
                                 <th className="px-4 py-2 md:text-lg font-semibold hidden md:table-cell">Test Category</th>
-                                <th className="px-4 py-2 md:text-lg font-semibold">Test Name</th>
-                                <th className="px-4 py-2 md:text-lg font-semibold">Rate</th>
+                                <th className="px-4 py-2 text-sm md:text-lg font-semibold">Test Name</th>
+                                <th className="px-4 py-2 text-sm md:text-lg font-semibold">Rate</th>
 
                                 {/* Conditionally add Location Rate column, but keep it inside the same row */}
                                 {user && user.me && (
-                                    <th className="px-4 py-2 md:text-lg font-semibold">Location Rate</th>
+                                    <th className="px-4 py-2 text-sm md:text-lg font-semibold">Location Rate</th>
                                 )}
 
                                 <th className="px-4 py-2 md:text-lg font-semibold hidden md:table-cell">Sample</th>
@@ -175,9 +175,10 @@ const LabServices = () => {
                                     className={`transition-all duration-300 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"
                                         } hover:bg-gray-200`}
                                 >
-                                    <td className="px-4 py-2 text-gray-700 border-b  hidden md:table-cell">{service.test_category}</td>
+                                    
+                                    <td className="px-4 py-2 md:text-base text-gray-700 border-b  hidden md:table-cell">{service.test_category}</td>
                                     <td
-                                        className="px-4 py-2 text-gray-900 font-medium border-b relative cursor-pointer"
+                                        className="px-4 py-2 text-sm  md:text-base md:text-md text-gray-900 font-medium border-b relative cursor-pointer"
                                         onMouseEnter={(e) => {
                                             setHoveredTest(service);
                                             setMousePosition({ x: e.clientX, y: e.clientY });
@@ -187,11 +188,11 @@ const LabServices = () => {
                                     >
                                         {service.test_name}
                                     </td>
-                                    <td className="px-4 py-2 text-green-700 font-semibold border-b">
+                                    <td className="px-4 py-2 text-sm md:text-base text-green-700 font-semibold border-b">
                                         {service.patient_rate}
                                     </td>
                                     {(user && user.me) &&
-                                        <td className="px-4 py-2 text-green-700 font-semibold border-b">
+                                        <td className="px-4 py-2 text-sm md:text-base  text-green-700 font-semibold border-b">
                                             {service.rate}
                                         </td>
                                     }

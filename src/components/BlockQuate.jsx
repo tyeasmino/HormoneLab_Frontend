@@ -1,25 +1,78 @@
-import React from 'react'
-import { RiDoubleQuotesL } from "react-icons/ri";
-import { RiDoubleQuotesR } from "react-icons/ri";
+import React from 'react';
+import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
+import { motion } from 'framer-motion';
 
-const BlockQuate = () => {
+const BlockQuote = () => {
+  const fadeIn = {
+    hidden: { opacity: 0, y: 30 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: 'easeOut',
+      },
+    },
+  };
+
   return (
-    <section className='bg-blue-950 text-white p-4 md:p-20'>
+    <section className='bg-blue-950 text-white p-6 md:p-20'>
       <div className='max-w-screen-lg mx-auto'>
-        <div className='border w-fit p-3 rounded-full mx-auto'>
-          <RiDoubleQuotesL className='md:text-2xl' />
+        <div className=''>
+
+
+          {/* Quote Text */}
+          <motion.div
+            className='my-6 md:my-12'
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={fadeIn}
+          >
+            <div className='w-fit mx-auto text-center relative'>
+              <p className='md:text-3xl text-sm font-medium italic'>
+                Investing in health today is investing in a stronger tomorrow. Small changes lead to significant impacts on our lives.
+              </p>
+
+              {/* Left Quote Icon with animation */}
+              <motion.div
+                className='absolute -left-20 -top-2'
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.3 }}
+                variants={fadeIn}
+              >
+                <RiDoubleQuotesL className='text-5xl' />
+              </motion.div>
+
+
+              {/* Right Quote Icon with animation */}
+              <motion.div
+                className='absolute -right-20 -top-2'
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.3 }}
+                variants={fadeIn}
+              >
+                <RiDoubleQuotesR className='text-5xl' />
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
 
-        <div className='my-3 md:my-10'>
-          <div className='w-fit flex  mx-auto md:text-2xl text-center'>
-            <span> <span className='text-2xl'>"</span> Investing in health today is investing in a stronger tomorrow. Small changes lead to significant impacts on our lives. <span className='text-2xl'>"</span></span>
-          </div>
-        </div>
+        {/* Author */}
+        <motion.div
+          className="text-center font-bold text-2xl mt-6 md:mt-12"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeIn}
+        >
+          <p className='text-lg md:text-2xl text-right text-gray-300'>- Mukesh Jain</p>
+        </motion.div>
       </div>
-
-
     </section>
-  )
-}
+  );
+};
 
-export default BlockQuate
+export default BlockQuote;

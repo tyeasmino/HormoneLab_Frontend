@@ -27,7 +27,7 @@ const Navbar = () => {
         || location.pathname === '/reports' || location.pathname === '/deposites';
 
     return (
-        <section className='max-w-screen-xl mx-auto'>
+        <section className='max-w-screen-xl md:px-20 mx-auto'>
             <div className="navbar">
                 <div className="navbar-start">
                     <div className="dropdown">
@@ -50,7 +50,7 @@ const Navbar = () => {
                             className={`menu menu-sm dropdown-content rounded-box z-[1] mt-3 w-64 p-2 shadow ${darkMode ? 'bg-black text-white' : 'bg-white text-black'
                                 }`}
                         >
-                            <li><a>Home</a></li>
+                            <li><Link to='/'>Home</Link></li>
                             <li>
                                 <a>Care at Hormone Lab</a>
                                 <ul className="p-2">
@@ -123,13 +123,13 @@ const Navbar = () => {
                 <div className="navbar-end flex gap-2">
                     <div className="flex items-center gap-2">
                         {/* dark mode */}
-                        <div className="dropdown dropdown-end">
+                        {/* <div className="dropdown dropdown-end">
                             <div className=" ">
                                 <p onClick={() => setDarkMode(!darkMode)} className=' cursor-pointer text-[25px]'>
                                     {darkMode ? <MdOutlineLightMode /> : <MdLightMode />}
                                 </p>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="dropdown dropdown-end">
                             {user ? (

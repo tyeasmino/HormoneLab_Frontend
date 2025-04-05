@@ -194,9 +194,9 @@ export const HlicLabDashboard = () => {
 
 
 
-          <div className="flex gap-5">
+          <div className="md:flex gap-5">
             {/* Location Selection */}
-            <div className="flex-1 relative">
+            <div className="md:flex-1 relative">
               <Select onValueChange={handleLocationChange}>
                 <SelectTrigger className="w-full">
                   {selectedLocation
@@ -222,7 +222,7 @@ export const HlicLabDashboard = () => {
             </div>
 
             {/* Hospital Selection */}
-            <div className="flex-1 relative">
+            <div className="mt-4 md:mt-0 md:flex-1 relative">
               <Select disabled={!selectedLocation} onValueChange={setSelectedHospital}>
                 <SelectTrigger className="w-full">
                   {selectedHospital
