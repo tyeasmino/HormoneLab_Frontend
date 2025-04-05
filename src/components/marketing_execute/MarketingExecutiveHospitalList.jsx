@@ -33,9 +33,9 @@ const MarketingExecutiveHospitalList = () => {
       <table className="min-w-full bg-white">
         <thead>
           <tr className="bg-blue-600 text-white">
-            <th className="py-3 px-6 text-left">Hospital</th>
-            <th className="py-3 px-6 text-left">Authority</th>
-            <th className="py-3 px-6 text-left">Contact</th>
+            <th className="py-3 px-2 md:px-6 text-sm md:text-base text-left">Hospital</th>
+            <th className="py-3 px-2 md:px-6 text-sm md:text-base hidden md:table-caption text-left">Authority</th>
+            <th className="py-3 px-2 md:px-6 text-sm md:text-base text-left">Contact</th>
           </tr>
         </thead>
         <tbody>
@@ -47,7 +47,7 @@ const MarketingExecutiveHospitalList = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <td className="py-4 px-6 flex items-center">
+              <td className="py-4 px-2 md:px-6 text-sm md:text-base flex items-center">
                 <img
                   src={hospital.image}
                   alt={hospital.hospital_name}
@@ -55,10 +55,10 @@ const MarketingExecutiveHospitalList = () => {
                 />
                 <span className="font-medium">{hospital.hospital_name}</span>
               </td>
-              <td className="py-4 px-6">
+              <td className="py-4 px-2 md:px-6 text-sm md:text-base hidden md:table-cell">
                 {hospital.user.first_name} {hospital.user.last_name}
               </td>
-              <td className="py-4 px-6">{hospital.phone}</td>
+              <td className="py-4 px-2 md:px-6 text-sm md:text-base">{hospital.phone}</td>
             </motion.tr>
           ))}
         </tbody>

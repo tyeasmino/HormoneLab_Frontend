@@ -13,65 +13,65 @@ import { AuthContext } from '../../contexts/AuthContext';
 
 
 const Sidebar = () => {
-    const { user } = useContext(AuthContext);
-    const [collapsed, setCollapsed] = useState(false);
-    const location = useLocation();
-    const toggleSidebar = () => setCollapsed(!collapsed);
-    const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile' || location.pathname === '/reports' ||  location.pathname === '/hospitals' ;
+  const { user } = useContext(AuthContext);
+  const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+  const toggleSidebar = () => setCollapsed(!collapsed);
+  const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile' || location.pathname === '/reports' || location.pathname === '/hospitals';
 
-    return (
-        <div className={`sidebar bg-purple h-full p-4 fixed left-0 top-20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
+  return (
+    <div className={`sidebar bg-purple h-full p-4 fixed left-0 top-20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
 
-            <div className="flex justify-between items-center mb-4">
-                <button onClick={toggleSidebar}>
-                    {collapsed ? (
-                        <AiOutlineNodeExpand className="text-2xl" />
-                    ) : (
-                        <AiOutlineNodeCollapse className="text-2xl" />
-                    )}
-                </button>
-            </div>
+      <div className="flex justify-between items-center mb-4">
+        <button onClick={toggleSidebar}>
+          {collapsed ? (
+            <AiOutlineNodeExpand className="text-2xl" />
+          ) : (
+            <AiOutlineNodeCollapse className="text-2xl" />
+          )}
+        </button>
+      </div>
 
 
-            <ul className="space-y-1">
-                <li className="relative group">
-                    <Link
-                        data-tour-element='dashboard'
-                        to="/dashboard"
-                        className={`flex items-center gap-2 ${location.pathname === "/dashboard" ? "p-1 shadow font-semibold" : ""}`}
-                    >
-                        <LuLayoutDashboard
-                            className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
-                        />
-                        {/* Show tooltip only when collapsed */}
-                        <span
-                            className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
-                        >
-                            Dashboard
-                        </span>
-                        {!collapsed && <span className="ml-2">Dashboard</span>}
-                    </Link>
-                </li>
-                <li className="relative group">
-                    <Link
-                        data-tour-element='profile'
-                        to="/profile"
-                        className={`flex items-center gap-2 ${location.pathname === "/profile" ? "p-1 shadow font-semibold" : ""}`}
-                    >
-                        <TbMoodEdit
-                            className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
-                        />
-                        {/* Show tooltip only when collapsed */}
-                        <span
-                            className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white   rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
-                        >
-                            Profile
-                        </span>
-                        {!collapsed && <span className="ml-2">Profile</span>}
-                    </Link>
-                </li>
+      <ul className="space-y-1">
+        <li className="relative group">
+          <Link
+            data-tour-element='dashboard'
+            to="/dashboard"
+            className={`flex items-center gap-2 ${location.pathname === "/dashboard" ? "p-1 shadow font-semibold" : ""}`}
+          >
+            <LuLayoutDashboard
+              className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
+            />
+            {/* Show tooltip only when collapsed */}
+            <span
+              className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+            >
+              Dashboard
+            </span>
+            {!collapsed && <span className="ml-2">Dashboard</span>}
+          </Link>
+        </li>
+        <li className="relative group">
+          <Link
+            data-tour-element='profile'
+            to="/profile"
+            className={`flex items-center gap-2 ${location.pathname === "/profile" ? "p-1 shadow font-semibold" : ""}`}
+          >
+            <TbMoodEdit
+              className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
+            />
+            {/* Show tooltip only when collapsed */}
+            <span
+              className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white   rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+            >
+              Profile
+            </span>
+            {!collapsed && <span className="ml-2">Profile</span>}
+          </Link>
+        </li>
 
-                {/* {user && user.fitMaker ? (
+        {/* {user && user.fitMaker ? (
           <>
              <li className="relative group">
               <Link
@@ -131,49 +131,50 @@ const Sidebar = () => {
           </>
         ) : null} */}
 
-                 {user && user.me ? (
+        {user && user.me ? (
           <>
             <li className="relative group">
               <Link
-              data-tour-element='hospitals'
+                data-tour-element='hospitals'
                 to="/hospitals"
-                className={`flex items-center gap-2 ${location.pathname === "/hospitals" ? "bg-white  dark:bg-transparent p-4 shadow font-semibold" : ""}`}
+                className={`flex items-center gap-2 ${location.pathname === "/hospitals" ? "p-1 shadow font-semibold" : ""}`}
               >
                 <BsHospital
                   className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
                 />
-                
+                {/* Show tooltip only when collapsed */}
                 <span
-                  className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+                  className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white   rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
                 >
                   Hospitals
                 </span>
                 {!collapsed && <span className="ml-2">Hospitals</span>}
               </Link>
             </li>
-          </>
-        ) : null} 
 
-                <li className="relative group">
-                    <Link
-                        data-tour-element='orders'
-                        to="/reports"
-                        className={`flex items-center gap-2 ${location.pathname === "/reports" ? "p-1 shadow font-semibold" : ""}`}
-                    >
-                        <LuClipboardList
-                            className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
-                        />
-                        <span
-                            className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
-                        >
-                            Reports
-                        </span>
-                        {!collapsed && <span className="ml-2">Reports</span>}
-                    </Link>
-                </li>
-            </ul>
-        </div>
-    );
+          </>
+        ) : null}
+
+        <li className="relative group">
+          <Link
+            data-tour-element='orders'
+            to="/reports"
+            className={`flex items-center gap-2 ${location.pathname === "/reports" ? "p-1 shadow font-semibold" : ""}`}
+          >
+            <LuClipboardList
+              className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
+            />
+            <span
+              className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+            >
+              Reports
+            </span>
+            {!collapsed && <span className="ml-2">Reports</span>}
+          </Link>
+        </li>
+      </ul>
+    </div>
+  );
 };
 
 export default Sidebar

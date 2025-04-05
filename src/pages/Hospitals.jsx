@@ -24,12 +24,12 @@ const Hospitals = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
-                            className="p-6 bg-blue-50 rounded-lg shadow-lg my-6"
+                            className="mx-auto p-6 bg-blue-50 rounded-lg shadow-lg my-6"
                         >
-                            <h2 className="text-2xl font-bold text-blue-800 mb-4">
+                            <h2 className="md:text-2xl font-bold text-blue-800 mb-4">
                                 Your Curated Hospital Network
                             </h2>
-                            <p className="text-blue-600 mb-4">
+                            <p className="text-sm md:text-base text-blue-600 mb-4">
                                 Explore the hospitals in your region with all the essential details.
                             </p>
                             <MarketingExecutiveHospitalList />

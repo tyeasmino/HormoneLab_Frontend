@@ -119,7 +119,7 @@ const HospitalAuthorityProfile = () => {
   };
 
   return (
-    <section className="w-[500px] m-auto shadow p-5">
+    <section className="md:w-[500px] m-auto shadow p-5">
       <div className="flex flex-col gap-5 relative">
         <div>
           <h2 className="md:text-3xl font-bold text-center">Update Your Profile</h2>
@@ -127,8 +127,8 @@ const HospitalAuthorityProfile = () => {
         </div>
 
         <form onSubmit={handleUpdateProfile}>
-          <section className="flex gap-5">
-            <div className="w-2/3">
+          <section className="flex flex-col md:flex-row gap-5">
+            <div className="md:w-2/3">
               {/* Location */}
               <div className="flex flex-col mb-5">
                 <label className="font-semibold text-sm" htmlFor="location">Location</label>
@@ -183,7 +183,7 @@ const HospitalAuthorityProfile = () => {
             </div>
 
             {/* Profile image */}
-            <div className="w-1/3">
+            <div className="md:w-1/3">
               <button type="button" className="bg-bg-dark text-sm px-3 py-1 rounded-md text-white" onClick={() => openCloudinaryWidget('image')}>
                 Upload Image
               </button>

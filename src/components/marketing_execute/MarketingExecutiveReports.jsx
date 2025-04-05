@@ -206,7 +206,6 @@ const MarketingExecutiveReports = () => {
 
 
 
-
       <div className="overflow-x-auto bg-white shadow-md rounded-lg mt-6">
         <table className="w-full table-auto text-left">
           <thead>
