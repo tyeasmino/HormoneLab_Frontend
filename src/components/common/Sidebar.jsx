@@ -9,6 +9,7 @@ import { TbMoodEdit } from "react-icons/tb";
 import { IoShirtOutline } from "react-icons/io5";
 import { LuClipboardList } from "react-icons/lu";
 import { AuthContext } from '../../contexts/AuthContext';
+import { FaMapMarkedAlt } from 'react-icons/fa';
 
 
 
@@ -17,10 +18,10 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const toggleSidebar = () => setCollapsed(!collapsed);
-  const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile' || location.pathname === '/reports' || location.pathname === '/hospitals';
+  const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile' || location.pathname === '/locations' || location.pathname === '/reports' || location.pathname === '/hospitals';
 
   return (
-    <div className={`sidebar bg-purple h-full p-4 fixed left-0 top-20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
+    <div className={`sidebar hidden md:block bg-purple h-full p-4 fixed left-0 top-20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
 
       <div className="flex justify-between items-center mb-4">
         <button onClick={toggleSidebar}>
@@ -52,24 +53,48 @@ const Sidebar = () => {
             {!collapsed && <span className="ml-2">Dashboard</span>}
           </Link>
         </li>
-        <li className="relative group">
-          <Link
-            data-tour-element='profile'
-            to="/profile"
-            className={`flex items-center gap-2 ${location.pathname === "/profile" ? "p-1 shadow font-semibold" : ""}`}
-          >
-            <TbMoodEdit
-              className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
-            />
-            {/* Show tooltip only when collapsed */}
-            <span
-              className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white   rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+
+        {user?.username !== 'hlic.it' &&
+          <li className="relative group">
+            <Link
+              data-tour-element='profile'
+              to="/profile"
+              className={`flex items-center gap-2 ${location.pathname === "/profile" ? "p-1 shadow font-semibold" : ""}`}
             >
-              Profile
-            </span>
-            {!collapsed && <span className="ml-2">Profile</span>}
-          </Link>
-        </li>
+              <TbMoodEdit
+                className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
+              />
+              {/* Show tooltip only when collapsed */}
+              <span
+                className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white   rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+              >
+                Profile
+              </span>
+              {!collapsed && <span className="ml-2">Profile</span>}
+            </Link>
+          </li>
+        }
+
+        {user?.username === 'hlic.it' &&
+          <li className="relative group">
+            <Link
+              data-tour-element='locations'
+              to="/locations"
+              className={`flex items-center gap-2 ${location.pathname === "/locations" ? "p-1 shadow font-semibold" : ""}`}
+            > 
+              <FaMapMarkedAlt
+                className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
+              />
+              {/* Show tooltip only when collapsed */}
+              <span
+                className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white   rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+              >
+                Locations
+              </span>
+              {!collapsed && <span className="ml-2">Locations</span>}
+            </Link>
+          </li>
+        }
 
         {/* {user && user.fitMaker ? (
           <>

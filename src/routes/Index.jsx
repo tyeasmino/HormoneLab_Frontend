@@ -13,6 +13,7 @@ import LabServices from '../pages/LabServices'
 import Profile from '../pages/Profile'
 import Reports from '../pages/Reports' 
 import Hospitals from '../pages/Hospitals'
+import Locations from '../pages/Locations'
 
 const Index = () => {
     return (
@@ -33,6 +34,11 @@ const Index = () => {
                     <Route path="/reports" element={<Reports />} />
                     {/* <Route path="/helping" element={<Helping />} /> */}
                     <Route path="/hospitals" element={<Hospitals />} />
+
+
+
+                    {/* Only For Admin */}
+                    <Route path="/locations" element={<Locations />} />
 
                 </Routes>
                 <Footer />

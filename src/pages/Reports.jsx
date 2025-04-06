@@ -11,11 +11,12 @@ const Reports = () => {
     const { user } = useContext(AuthContext)
 
     return (
-        <section className='flex my-10'>
+        <section className='my-10 md:my-20'>
             <Sidebar />
 
-            <section className='max-w-5xl mx-auto mt-8'>
+            <section className='max-w-5xl mx-auto'>
                 {user?.username === 'hlic.histo' && <ReportList />}
+                {user?.username === 'hlic.it' && <ReportList />}
                 {(user && user.ha) ? (<> <MarketingExecutiveReports /> </>) : (<></>)}
                 {(user && user.me) ? (<> <MarketingExecutiveReports /> </>) : (<></>)}
             </section>

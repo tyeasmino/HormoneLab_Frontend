@@ -36,7 +36,7 @@ const BlockQuote = () => {
 
               {/* Left Quote Icon with animation */}
               <motion.div
-                className='absolute -left-20 -top-2'
+                className='absolute -left-20 -top-2 hidden md:block'
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.3 }}
@@ -48,7 +48,7 @@ const BlockQuote = () => {
 
               {/* Right Quote Icon with animation */}
               <motion.div
-                className='absolute -right-20 -top-2'
+                className='absolute -right-20 -top-2 hidden md:block'
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.3 }}

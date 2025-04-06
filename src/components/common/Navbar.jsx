@@ -27,7 +27,7 @@ const Navbar = () => {
         || location.pathname === '/reports' || location.pathname === '/deposites';
 
     return (
-        <section className='max-w-screen-xl md:px-20 mx-auto'>
+        <section className='max-w-screen-xl mx-auto'>
             <div className="navbar">
                 <div className="navbar-start">
                     <div className="dropdown">
@@ -158,6 +158,36 @@ const Navbar = () => {
                                                 </li>
                                             </>
                                         )}
+
+
+                                        {user?.username === 'hlic.it' &&
+                                            <li className='md:hidden'>
+                                                <Link to="/locations">Locations</Link>
+                                            </li>
+                                        }
+
+                                        {user?.username !== 'hlic.it' &&
+                                            <li className='md:hidden'>
+                                                <Link to="/profile">Profile</Link>
+                                            </li>
+                                        }
+
+                                        {user?.username !== 'hlic.histo' &&
+                                            <li className='md:hidden'>
+                                                <Link to="/profile">Profile</Link>
+                                            </li>
+                                        }
+
+                                        {user && user.me && (
+                                            <li className='md:hidden'>
+                                                <Link to="/hospitals">Hospitals</Link>
+                                            </li>
+                                        )}
+
+                                        <li className='md:hidden'>
+                                            <Link to="/reports">Reports</Link>
+                                        </li>
+                                        <hr className='md:hidden' />
                                         <li>
                                             <button onClick={logout}>Logout</button>
                                         </li>

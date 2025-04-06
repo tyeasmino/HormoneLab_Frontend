@@ -17,7 +17,7 @@ const Footer = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h6 className="text-xl font-semibold">Location</h6>
+                        <h6 className="text-xl text-white font-semibold">Location</h6>
                         <p className='text-gray-400'>
                             The Hormone Lab & Infertility Center <br />
                             21/F, Block-D, Bashbari Road, <br />
@@ -34,7 +34,7 @@ const Footer = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <h6 className="text-xl font-semibold">Company</h6>
+                        <h6 className="text-xl  text-white  font-semibold">Company</h6>
                         <p className="text-gray-400">Sat-Thu <span className='text-white'>: 9.00 AM to 10.00 PM</span></p>
                         <p className="text-gray-400">Friday <span className='text-white'>: 9.00 AM to 07.00 PM</span></p>
                     </motion.nav>
@@ -46,7 +46,7 @@ const Footer = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1 }}
                     >
-                        <h6 className="text-xl font-semibold">Emergency Cases</h6>
+                        <h6 className="text-xl  text-white  font-semibold">Emergency Cases</h6>
                         <p className="text-gray-400 text-xl">+8802223321207</p>
                     </motion.nav>
 
@@ -57,7 +57,7 @@ const Footer = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1.2 }}
                     >
-                        <h6 className="text-xl font-semibold">Social Media</h6>
+                        <h6 className="text-xl  text-white  font-semibold">Social Media</h6>
                         <div className='flex gap-4'>
                             <Link target='_blank' to='https://www.facebook.com/people/The-Hormone-Lab-Infertility-Centre/100063559990894/?rdid=d9U9cbzM2g7XTbb3&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1DwZ4Xqhez%2F'>
                                 <motion.div

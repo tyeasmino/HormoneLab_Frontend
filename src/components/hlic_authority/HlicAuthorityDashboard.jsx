@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Calendar } from "@/components/ui/calendar";
@@ -7,13 +7,17 @@ import { FaHospital, FaUsers, FaMapMarkedAlt, FaMoneyBillWave, FaFileInvoice } f
 import { PieChart, Pie, Cell } from "recharts";
 import { GiDrippingTube } from "react-icons/gi";
 import axios from "axios";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const HlicAuthorityDashboard = () => {
+  const { user } = useContext(AuthContext)
+  const token = localStorage.getItem("token");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [hospitalAuthorities, setHospitalAuthorities] = useState([]);
   const [locations, setLocations] = useState([]);
   const [executives, setExecutives] = useState([]);
   const [users, setUsers] = useState([]);
+  const [reports, setReports] = useState([]);
 
   const [marketingExecutives, setMarketingExecutives] = useState(0);
   const [hospitalAuthority, setHospitalAuthority] = useState(0);
@@ -25,47 +29,61 @@ const HlicAuthorityDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [locationsRes, executivesRes, usersRes, labServicesRes, hospitalsRes] = await Promise.all([
-          axios.get("https://hormone-lab-backend.vercel.app/clients/all_locations/"),
-          axios.get("https://hormone-lab-backend.vercel.app/executives/all-executives/"),
-          axios.get("https://hormone-lab-backend.vercel.app/accounts/users/"),
-          axios.get("https://hormone-lab-backend.vercel.app/executives/lab-services/"),
-          axios.get("https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/"),
+        const [locationsRes, executivesRes, usersRes, labServicesRes, hospitalsRes, reportsRes] = await Promise.all([
+          axios.get("https://hormone-lab-backend.vercel.app/clients/all_locations/", {
+            headers: { Authorization: `Token ${token}` },
+          }),
+          axios.get("https://hormone-lab-backend.vercel.app/executives/all-executives/", {
+            headers: { Authorization: `Token ${token}` },
+          }),
+          axios.get("https://hormone-lab-backend.vercel.app/accounts/users/", {
+            headers: { Authorization: `Token ${token}` },
+          }),
+          axios.get("https://hormone-lab-backend.vercel.app/executives/lab-services/", {
+            headers: { Authorization: `Token ${token}` },
+          }),
+          axios.get("https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/", {
+            headers: { Authorization: `Token ${token}` },
+          }),
+          axios.get("https://hormone-lab-backend.vercel.app/clients/reports/", {
+            headers: { Authorization: `Token ${token}` },
+          }),
         ]);
-  
+
+
         setLocations(locationsRes.data || []);
         setExecutives(executivesRes.data || []);
         setUsers(usersRes.data || []);
         setHospitalAuthorities(hospitalsRes.data || []);
-  
         setServicesCount(labServicesRes.data ? labServicesRes.data.length : 0);
-  
+        setReports(reportsRes.data ? reportsRes.data.length : 0);
+
         // Debugging
         console.log("Users Data:", usersRes.data);
         console.log("Hospital Authorities:", hospitalsRes.data);
-  
+
         // Count Marketing Executives
         const executivesCount = usersRes.data ? usersRes.data.filter((user) => user.me !== null).length : 0;
         setMarketingExecutives(executivesCount);
-  
+
         // Count Hospital Authorities
         const hospitalCount = usersRes.data ? usersRes.data.filter((user) => user.ha !== null).length : 0;
         setHospitalAuthority(hospitalCount);
-  
+
         // Calculate Total Due
         const total = executivesRes.data ? executivesRes.data.reduce((sum, executive) => sum + (executive.due || 0), 0) : 0;
         setTotalDue(total);
-  
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error.response ? error.response.data : error.message);
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
-  
+
 
   // Dynamically generate location & marketing executives table data
   const locationData = executives.map((executive) => {
@@ -98,7 +116,7 @@ const HlicAuthorityDashboard = () => {
     { label: "Total Hospitals", value: loading ? "Loading..." : hospitalAuthority, icon: <FaHospital /> },
     { label: "Total Services", value: loading ? "Loading..." : servicesCount, icon: <GiDrippingTube /> },
     { label: "Total Due", value: loading ? "Loading..." : `${totalDue.toLocaleString()}`, icon: <FaMoneyBillWave /> },
-    { label: "Total Reports", value: 120, icon: <FaFileInvoice /> },
+    { label: "Total Reports", value: loading ? "Loading..." : reports, icon: <FaFileInvoice /> },
     { label: "Due Reports", value: 15, icon: <FaFileInvoice /> },
   ];
 
@@ -125,7 +143,7 @@ const HlicAuthorityDashboard = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       {/* Analytics Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         {analyticsData.map((item, index) => (
           <Card key={index} className="bg-white p-4 shadow-md flex items-center gap-3">
             <div className="text-3xl text-blue-500">{item.icon}</div>
@@ -138,8 +156,8 @@ const HlicAuthorityDashboard = () => {
       </div>
 
       {/* Charts & Calendar Section */}
-      <div className="grid grid-cols-8 gap-6">
-        <Card className="col-span-4 bg-white shadow-md p-4">
+      <div className="grid md:grid-cols-8 gap-6">
+        <Card className="md:col-span-4 bg-white shadow-md p-4">
           <h2 className="text-lg font-semibold mb-2">Monthly Reports Overview</h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={chartData}>
@@ -151,12 +169,12 @@ const HlicAuthorityDashboard = () => {
           </ResponsiveContainer>
         </Card>
 
-        <Card className="col-span-2 bg-white shadow-md p-4">
+        <Card className="md:col-span-2 bg-white shadow-md p-4">
           <h2 className="text-lg font-semibold mb-2">Calendar</h2>
           <Calendar mode="single" selected={selectedDate} onSelect={setSelectedDate} />
         </Card>
 
-        <Card className="col-span-2 bg-white shadow-md p-4">
+        <Card className="md:col-span-2 bg-white shadow-md p-4">
           <h2 className="text-lg font-semibold mb-2">Location Distribution</h2>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -180,7 +198,7 @@ const HlicAuthorityDashboard = () => {
         </Card>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {/* Location & Executive Table */}
         <Card className="bg-white shadow-md mt-6 p-4">
           <h2 className="text-lg font-semibold mb-4">Location & Marketing Executives</h2>

@@ -11,7 +11,7 @@ const Profile = () => {
     <section className='flex p-5'>
         <Sidebar />
 
-        <section className='max-w-screen-xl m-auto'>
+        <section className='max-w-screen-xl m-auto md:my-20'>
           {(user && user.ha) ? (<> <HospitalAuthorityProfile /> </>): (<></>)}
           {(user && user.me) ? (<> <MarketingExecutiveProfile /> </>): (<></>)}
         </section>

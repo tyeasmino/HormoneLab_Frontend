@@ -58,7 +58,6 @@ const TodaysReportList = () => {
         );
 
         setReports(reportsWithDetails);
-        setFilteredReports(reportsWithDetails); // Initialize filteredReports with all reports
       } catch (error) {
         console.error("Error fetching reports:", error);
       } finally {
