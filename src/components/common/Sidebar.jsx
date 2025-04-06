@@ -10,6 +10,7 @@ import { IoShirtOutline } from "react-icons/io5";
 import { LuClipboardList } from "react-icons/lu";
 import { AuthContext } from '../../contexts/AuthContext';
 import { FaMapMarkedAlt } from 'react-icons/fa';
+import { GiDrippingTube } from 'react-icons/gi';
 
 
 
@@ -18,7 +19,7 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const toggleSidebar = () => setCollapsed(!collapsed);
-  const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile' || location.pathname === '/locations' || location.pathname === '/reports' || location.pathname === '/hospitals';
+  const isOnProtectedPage = location.pathname === '/dashboard' || location.pathname === '/profile' || location.pathname === '/labservices' || location.pathname === '/locations' || location.pathname === '/reports' || location.pathname === '/hospitals';
 
   return (
     <div className={`sidebar hidden md:block bg-purple h-full p-4 fixed left-0 top-20 transition-all duration-300 ${collapsed ? 'w-16' : 'w-64'}`}>
@@ -75,7 +76,8 @@ const Sidebar = () => {
           </li>
         }
 
-        {user?.username === 'hlic.it' &&
+        {user?.username === 'hlic.it' && 
+        <>
           <li className="relative group">
             <Link
               data-tour-element='locations'
@@ -94,6 +96,29 @@ const Sidebar = () => {
               {!collapsed && <span className="ml-2">Locations</span>}
             </Link>
           </li>
+
+
+          <li className="relative group">
+            <Link
+              data-tour-element='labservicse'
+              to="/labservices"
+              className={`flex items-center gap-2 ${location.pathname === "/labservices" ? "p-1 shadow font-semibold" : ""}`}
+            > 
+              <GiDrippingTube
+                className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
+              />
+              {/* Show tooltip only when collapsed */}
+              <span
+                className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white   rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+              >
+                Lab Services
+              </span>
+              {!collapsed && <span className="ml-2">Lab Services</span>}
+            </Link>
+          </li>
+        </>
+
+
         }
 
         {/* {user && user.fitMaker ? (

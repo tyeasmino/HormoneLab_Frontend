@@ -161,9 +161,15 @@ const Navbar = () => {
 
 
                                         {user?.username === 'hlic.it' &&
-                                            <li className='md:hidden'>
-                                                <Link to="/locations">Locations</Link>
-                                            </li>
+                                            <>
+                                                <li className='md:hidden'>
+                                                    <Link to="/locations">Locations</Link>
+                                                </li>
+                                                <li className='md:hidden'>
+                                                    <Link to="/labservices">Lab Services</Link>
+                                                </li>
+
+                                            </>
                                         }
 
                                         {user?.username !== 'hlic.it' &&

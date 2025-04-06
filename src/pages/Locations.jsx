@@ -17,6 +17,8 @@ const Locations = () => {
   const [newLocation, setNewLocation] = useState({ location_name: '', slug: '' });
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedExecutive, setSelectedExecutive] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
 
 
 
@@ -153,6 +155,19 @@ const Locations = () => {
     });
 
 
+  const allRows = [...locationDetails, ...unassignedRows];
+
+  const filteredRows = allRows.filter((row) => {
+    const searchValue = searchTerm.toLowerCase();
+    return (
+      (row.location_name && row.location_name.toLowerCase().includes(searchValue)) ||
+      (row.slug && row.slug.toLowerCase().includes(searchValue)) ||
+      (row.executive_name && row.executive_name.toLowerCase().includes(searchValue))
+    );
+  });
+
+
+
   return (
     <section>
       <Sidebar />
@@ -208,6 +223,17 @@ const Locations = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h2 className="text-lg md:text-xl font-semibold mb-4">All Locations & Assigned Executives</h2>
+
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search by location, slug or executive..."
+                className="w-full bg-transparent px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-sm md:text-base"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
             <div className="w-full overflow-x-auto">
               <table className="w-full text-left border-collapse text-sm md:text-base">
                 <thead>
@@ -225,7 +251,7 @@ const Locations = () => {
                       </td>
                     </tr>
                   ) : (
-                    [...locationDetails, ...unassignedRows].map((row) => (
+                    filteredRows.map((row) => (
                       <tr key={row.id} className="border-b hover:bg-gray-50">
                         <td className="p-2">
                           {row.location_name || <i className="text-red-500">Not set</i>}

@@ -14,6 +14,7 @@ import Profile from '../pages/Profile'
 import Reports from '../pages/Reports' 
 import Hospitals from '../pages/Hospitals'
 import Locations from '../pages/Locations'
+import LabServiceManagement from '../pages/LabServiceManagement'
 
 const Index = () => {
     return (
@@ -39,6 +40,7 @@ const Index = () => {
 
                     {/* Only For Admin */}
                     <Route path="/locations" element={<Locations />} />
+                    <Route path="/labservices" element={<LabServiceManagement />} />
 
                 </Routes>
                 <Footer />
