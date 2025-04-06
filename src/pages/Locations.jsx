@@ -5,6 +5,7 @@ import Sidebar from '../components/common/Sidebar';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import Loading from '../components/common/Loading';
+import { PencilIcon } from 'lucide-react';
 
 const Locations = () => {
   const { user } = useContext(AuthContext);
@@ -14,6 +15,11 @@ const Locations = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newLocation, setNewLocation] = useState({ location_name: '', slug: '' });
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedExecutive, setSelectedExecutive] = useState(null);
+
+
+
 
   useEffect(() => {
     fetchData();
@@ -79,23 +85,73 @@ const Locations = () => {
       executive_name: userInfo
         ? `${userInfo.first_name} ${userInfo.last_name}`.trim() || userInfo.username
         : "Not selected yet",
+      executive_id: executive?.id || null,
     };
   });
+
+
+
+
+  const handleExecutiveClick = (execId, locationId, name, locationName) => {
+    if (!locationId) return;
+    setSelectedExecutive({ id: execId, locationId, name, locationName });
+    setShowConfirm(true);
+  };
+
+
+
+
+  // Call backend to release executive from location
+  const releaseExecutive = async () => {
+    if (!selectedExecutive) return;
+
+    try {
+      // Step 1: Remove location from executive
+      await axios.patch(
+        `https://hormone-lab-backend.vercel.app/executives/all-executives/${selectedExecutive.id}/`,
+        { location: null },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+
+      // Step 2: Mark location as unselected
+      await axios.patch(
+        `https://hormone-lab-backend.vercel.app/clients/all_locations/${selectedExecutive.locationId}/`,
+        { is_selected: false },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+
+      toast.success(`Location released from ${selectedExecutive.name}`);
+      setShowConfirm(false);
+      setSelectedExecutive(null);
+      fetchData(); // refresh data
+    } catch (error) {
+      toast.error("Failed to release location");
+    }
+  };
+
 
   const unassignedExecutives = executives.filter(exec => exec.location === null);
-  const unassignedRows = unassignedExecutives.map(exec => {
-    const userInfo = users.find(u => u.user_id === exec.user);
-    const name = userInfo
-      ? `${userInfo.first_name} ${userInfo.last_name}`.trim() || userInfo.username
-      : "Unknown User";
 
-    return {
-      id: `unassigned-${exec.id}`,
-      location_name: null,
-      slug: null,
-      executive_name: name,
-    };
-  });
+
+
+  const unassignedRows = executives
+    .filter((exec) => exec.location === null)
+    .map((exec) => {
+      const userInfo = users.find((u) => u.user_id === exec.user);
+      const name =
+        userInfo?.first_name || userInfo?.last_name
+          ? `${userInfo.first_name} ${userInfo.last_name}`.trim()
+          : userInfo?.username || "Unknown";
+
+      return {
+        id: `unassigned-${exec.id}`,
+        location_name: null,
+        slug: null,
+        executive_name: name,
+        executive_id: exec.id,
+      };
+    });
+
 
   return (
     <section>
@@ -177,12 +233,31 @@ const Locations = () => {
                         <td className="p-2">
                           {row.slug || <i className="text-red-500">Not set</i>}
                         </td>
-                        <td className="p-2">
-                          {row.executive_name === "Not selected yet" ? (
-                            <span className="text-red-500">{row.executive_name}</span>
+                        <td className="p-2 text-sm md:text-base flex items-center gap-2">
+                          {row.executive_name !== "Not selected yet" ? (
+                            <>
+                              <span className="text-black">{row.executive_name}</span>
+                              {row.location_name && (
+                                <button
+                                  onClick={() =>
+                                    handleExecutiveClick(
+                                      row.executive_id,
+                                      row.id,
+                                      row.executive_name,
+                                      row.location_name
+                                    )
+                                  }
+                                  className="text-gray-500 hover:text-blue-600"
+                                  title="Release location"
+                                >
+                                  <PencilIcon className="w-4 h-4" />
+                                </button>
+                              )}
+                            </>
                           ) : (
-                            row.executive_name
+                            <span className="text-red-500">Not selected yet</span>
                           )}
+
                         </td>
                       </tr>
                     ))
@@ -192,6 +267,38 @@ const Locations = () => {
             </div>
           </motion.div>
         </div>
+
+
+        {showConfirm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-xl shadow-md w-11/12 max-w-md text-center">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">Release Location</h2>
+              <p className="text-sm md:text-base mb-6">
+                Are you sure you want to release <strong>{selectedExecutive.name}</strong> from{" "}
+                <strong>{selectedExecutive.locationName}</strong>?
+              </p>
+
+              <div className="flex justify-center gap-4">
+                <button
+                  className="px-4 py-2 bg-gray-300 rounded-lg text-sm md:text-base"
+                  onClick={() => {
+                    setShowConfirm(false);
+                    setSelectedExecutive(null);
+                  }}
+                >
+                  No
+                </button>
+                <button
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm md:text-base"
+                  onClick={releaseExecutive}
+                >
+                  Yes, Release
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </section>
     </section>
   );
