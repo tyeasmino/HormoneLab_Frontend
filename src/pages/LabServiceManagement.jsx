@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import EditLabServiceModal from '../components/EditLabServiceModal';
-
+import AddLabServiceModal from '../components/AddLabServiceModal';
 
 
 
@@ -87,13 +87,19 @@ const LabServicesPage = () => {
             <div className="px-4 sm:px-8 py-6 max-w-screen-xl mx-auto">
                 <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
                     <h2 className="text-xl sm:text-2xl font-semibold">All Lab Services</h2>
-                    <Input
-                        placeholder="Search by name, category, sample, reporting..."
-                        className="max-w-sm"
-                        value={search}
-                        onChange={e => setSearch(e.target.value)}
-                    />
+                    <div className="flex gap-2 flex-col sm:flex-row">
+                        <Input
+                            placeholder="Search by name, category, sample, reporting..."
+                            className="max-w-sm"
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                        />
+                        <AddLabServiceModal
+                            onAdd={(newService) => setLabTests(prev => [newService, ...prev])}
+                        />
+                    </div>
                 </div>
+
 
                 {filteredTests.length === 0 ? (
                     <div className="text-center text-gray-500 mt-10">No results found.</div>
@@ -115,7 +121,7 @@ const LabServicesPage = () => {
                                         <CardContent className="p-4">
                                             <div className="flex justify-between items-center mb-2">
                                                 <h3 className="text-lg font-bold text-primary">{test.test_name}</h3>
-                                             
+
 
                                                 <EditLabServiceModal test={test} onUpdate={(updatedTest) => {
                                                     setLabTests(prev =>
@@ -127,7 +133,7 @@ const LabServicesPage = () => {
                                                 }} />
 
                                             </div>
- 
+
 
 
                                             <p className="text-sm text-muted-foreground mb-1 font-medium">{test.test_category}</p>
@@ -167,7 +173,7 @@ const LabServicesPage = () => {
                     </>
                 )}
             </div>
- 
+
 
         </section>
     );
