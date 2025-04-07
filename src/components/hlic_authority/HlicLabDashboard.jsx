@@ -5,8 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { UploadCloud, FileText } from "lucide-react";
-import { SelectContent } from "@radix-ui/react-select"; 
+import { SelectContent } from "@radix-ui/react-select";
 import HlicTodayReportList from "./HlicTodayReportList";
+import { toast } from "react-hot-toast";
+
 
 export const HlicLabDashboard = () => {
   const token = localStorage.getItem('token');
@@ -16,6 +18,7 @@ export const HlicLabDashboard = () => {
   const [reportFile, setReportFile] = useState(null);
   const [hospitals, setHospitals] = useState([]);
   const [error, setError] = useState(null);
+  const [uploadedFileName, setUploadedFileName] = useState("");
 
 
 
@@ -55,7 +58,7 @@ export const HlicLabDashboard = () => {
           "Content-Type": "application/json",
         },
       });
-    
+
       if (!res.ok) throw new Error("Failed to fetch hospitals.");
       const data = await res.json();
       setHospitals(data);
@@ -124,10 +127,12 @@ export const HlicLabDashboard = () => {
         throw new Error("Failed to send the report!");
       }
 
-      alert("Report Sent Successfully!");
+      toast.success("Report Sent Successfully!");
+
       setReportData({ report_name: "", report_file: "" }); // Reset name & file
       setSelectedLocation(null);
       setSelectedHospital(null);
+      setUploadedFileName("");
     } catch (err) {
       console.error(err.message);
       setError(err.message || "Failed to send the report!");
@@ -138,36 +143,47 @@ export const HlicLabDashboard = () => {
 
 
 
+
+
   const openCloudinaryWidget = () => {
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: 'dxcwijywg',
         uploadPreset: 'HormoneLab',
-        resourceType: 'raw', // 'raw' allows PDF uploads
+        resourceType: 'raw',
         sources: ['local'],
         multiple: false,
         maxFiles: 1,
         folder: 'uploads',
-        clientAllowedFormats: ['pdf'],
+        clientAllowedFormats: ['pdf', 'doc', 'docx'],
+        // 👇 this will override the name of the uploaded file
+        public_id: Date.now().toString(), // or use some cleaned name if you prefer
       },
       (error, result) => {
         if (error) {
           console.error('Error uploading to Cloudinary:', error);
-          alert('File upload failed. Please try again.');
+          toast.error('File upload failed. Please try again.');
         } else if (result.event === 'success') {
-          console.log('Uploaded PDF:', result.info.secure_url);
+          const originalFilename = result.info.original_filename;
+          const secureUrl = result.info.secure_url;
+          const extensionMatch = secureUrl.match(/\.(\w+)$/);
+          const fileExtension = extensionMatch ? extensionMatch[1] : "";
+          const fullFileName = `${originalFilename}.${fileExtension}`;
+  
+          setUploadedFileName(fullFileName);
           setReportData((prev) => ({
             ...prev,
-            report_file: result.info.secure_url, // Save Cloudinary URL
+            report_file: result.info.secure_url,
           }));
+  
+          toast.success(`📄 ${fullFileName} uploaded successfully!`);
         }
       }
     );
+  
     widget.open();
   };
-
-
-
+  
 
 
   return (
@@ -250,32 +266,16 @@ export const HlicLabDashboard = () => {
 
 
           {/* File Upload */}
-          <label onClick={() => openCloudinaryWidget('raw')} className="flex items-center space-x-2 bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300">
+          <label
+            onClick={() => openCloudinaryWidget('raw')}
+            className="flex items-center space-x-2 bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300"
+          >
             <UploadCloud className="w-5 h-5 text-gray-600" />
-            <span >{reportFile ? reportFile.name : "Upload Report (PDF)"}</span>
-            {/* <Input type="file" className="hidden" onChange={handleFileChange} /> */}
+            <span className="text-sm text-gray-800">
+              {uploadedFileName ? uploadedFileName : "Upload Report (PDF or Word)"}
+            </span>
           </label>
 
-
-          {/* <div className="mb-4">
-            <button
-              type="button"
-              className="flex items-center space-x-2 bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300"
-              onClick={() => openCloudinaryWidget('raw')} // Trigger Cloudinary widget for PDF upload
-            >
-              <UploadCloud className="w-5 h-5 text-gray-600" /> Upload Report File (PDF)
-            </button>
-            {reportData.report_file && (
-              <a
-                href={reportData.report_file}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline mt-2 block"
-              >
-                View Uploaded PDF
-              </a>
-            )}
-          </div> */}
 
 
           {/* Submit Button */}
@@ -285,21 +285,7 @@ export const HlicLabDashboard = () => {
         </form>
       </motion.div>
 
-      {/* <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="max-w-5xl mx-auto mt-8"
-      >
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">📜 Sent Reports</h2>
-
-        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-          <ReportList />
-          </div>
-          </motion.div> */}
-          {/* <ReportList /> */}
-
-          <HlicTodayReportList />
+      <HlicTodayReportList />
     </div>
   );
 };
