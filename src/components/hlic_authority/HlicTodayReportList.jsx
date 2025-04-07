@@ -1,14 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Download } from "lucide-react";
+import { Download, Trash2 } from "lucide-react";
 import Loading from "../common/Loading";
 import { motion } from "framer-motion";
+import { Dialog } from "../ui/dialog";
+import toast from "react-hot-toast";
+
+
+
+
 
 const HlicTodayReportList = () => {
   const token = localStorage.getItem("token");
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedReportId, setSelectedReportId] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
 
 
   useEffect(() => {
@@ -67,6 +76,27 @@ const HlicTodayReportList = () => {
     fetchReports();
   }, [token]);
 
+
+  const handleDelete = async (reportId) => {
+    try {
+      await axios.delete(`https://hormone-lab-backend.vercel.app/clients/reports/${reportId}/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+
+      toast.success("Report deleted successfully!");
+      setReports((prev) => prev.filter((r) => r.id !== reportId));
+    } catch (error) {
+      console.error("Failed to delete report:", error);
+      toast.error("Something went wrong while deleting.");
+    }
+  };
+
+
+
+
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -74,6 +104,9 @@ const HlicTodayReportList = () => {
       day: "numeric",
     });
   };
+
+
+
 
   return (
     <motion.div
@@ -94,6 +127,7 @@ const HlicTodayReportList = () => {
               <th className="px-2 md:px-4 py-2 text-[12px] md:text-base">Hospital</th>
               <th className="px-2 md:px-4 py-2 md:text-base text-center hidden md:block">Download</th>
               <th className="px-2 md:px-4 py-2 text-[12px] flex justify-center md:hidden"><Download className="w-4 h-4" /></th>
+              <th className="px-2 md:px-4 py-2 text-[12px] md:text-base"><Trash2 className="w-4 h-4" /></th>
             </tr>
           </thead>
           <tbody>
@@ -140,7 +174,7 @@ const HlicTodayReportList = () => {
 
                   <td className="px-2 md:px-4 py-2 text-center">
                     <a
-                      href={report.report_file}
+                      href={`https://hormone-lab-backend.vercel.app/clients/download-report/${report.id}`} // Backend URL for downloading the report
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
@@ -149,6 +183,19 @@ const HlicTodayReportList = () => {
                       <span className="hidden md:inline md:ml-1">Download</span>
                     </a>
                   </td>
+
+                  <td className="px-2 md:px-4 py-2 text-[12px] md:text-base">
+                    <button
+                      onClick={() => {
+                        setSelectedReportId(report.id);
+                        setShowConfirmModal(true);
+                      }}
+                      className="text-red-400 hover:text-red-600 transition"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </td>
+
                 </tr>
               ))
             ) : (
@@ -162,7 +209,41 @@ const HlicTodayReportList = () => {
         </table>
       </div>
 
+
+
+
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-xl shadow-lg p-6 w-[90%] max-w-sm">
+            <h2 className="text-lg font-semibold mb-2">Delete Report?</h2>
+            <p className="text-gray-600 text-sm mb-4">
+              Are you sure you want to delete this report? This action cannot be undone.
+            </p>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="px-4 py-1.5 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  await handleDelete(selectedReportId);
+                  setShowConfirmModal(false);
+                }}
+                className="px-4 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
+
+
+
   );
 };
 

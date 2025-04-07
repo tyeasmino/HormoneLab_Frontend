@@ -113,7 +113,6 @@ export const HlicLabDashboard = () => {
 
       console.log("Request Body:", requestBody);
       const res = await fetch("https://hormone-lab-backend.vercel.app/clients/reports/", {
-      // const res = await fetch("http://127.0.0.1:8000/clients/reports/", {
         method: "POST",
         headers: {
           Authorization: `Token ${token}`,
@@ -157,8 +156,8 @@ export const HlicLabDashboard = () => {
         maxFiles: 1,
         folder: 'uploads',
         clientAllowedFormats: ['pdf', 'doc', 'docx'],
-        // Use original filename or a cleaned-up version
-        public_id: (result) => result.info.original_filename.replace(/[^a-z0-9]/gi, '_').toLowerCase(), // Example clean-up for the filename
+        // 👇 this will override the name of the uploaded file
+        public_id: Date.now().toString(), // or use some cleaned name if you prefer
       },
       (error, result) => {
         if (error) {
@@ -170,13 +169,13 @@ export const HlicLabDashboard = () => {
           const extensionMatch = secureUrl.match(/\.(\w+)$/);
           const fileExtension = extensionMatch ? extensionMatch[1] : "";
           const fullFileName = `${originalFilename}.${fileExtension}`;
-      
+  
           setUploadedFileName(fullFileName);
           setReportData((prev) => ({
             ...prev,
             report_file: result.info.secure_url,
           }));
-      
+  
           toast.success(`📄 ${fullFileName} uploaded successfully!`);
         }
       }
@@ -184,7 +183,6 @@ export const HlicLabDashboard = () => {
   
     widget.open();
   };
-  
   
 
 
