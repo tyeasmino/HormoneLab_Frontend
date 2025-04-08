@@ -11,7 +11,7 @@ const Hospitals = () => {
     const { user } = useContext(AuthContext);
 
     return (
-        <section className='flex md:my-20'>
+        <section className='md:m-20'>
             <Sidebar />
 
             <section className='max-w-screen-xl m-auto'>
