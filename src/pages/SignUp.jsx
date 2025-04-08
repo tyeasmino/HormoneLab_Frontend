@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import signup from '../assets/signup.png'
 import { Link } from 'react-router'
 import { ImGoogle2 } from "react-icons/im";
 import { FaSquareFacebook } from "react-icons/fa6";
 import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom'
 
 
 const SignUp = () => {
@@ -20,6 +22,14 @@ const SignUp = () => {
 
   const [successTitle, setSuccessTitle] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const { user, loading, login } = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard');
+    }
+  }, [loading, user, navigate]);
 
 
   const handleChange = (e) => {
@@ -85,6 +95,15 @@ const SignUp = () => {
       }
     }
   }
+
+
+  if (loading) {
+    return <div className='flex items-center justify-center m-auto w-full min-h-svh'>
+      <span className="loading loading-spinner loading-md "></span>
+    </div>
+  }
+
+  
 
 
   return (
@@ -212,7 +231,7 @@ const SignUp = () => {
               </div>
             </div>
             <button type='submit' className='w-full bg-blue-500 py-2 my-5 rounded text-center text-white font-semibold'>
-                Sign Up 
+              Sign Up
             </button>
           </form>
 

@@ -7,9 +7,9 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { LiaUserEditSolid } from 'react-icons/lia';
 
 const Navbar = () => {
-    const { user, logout } = useContext(AuthContext);
+    const { user, logout, loading, profileData } = useContext(AuthContext);
     const [darkMode, setDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")) || false);
-    const [profileData, setProfileData] = useState({ image: '', balance: null });
+    // const [profileData, setProfileData] = useState({ image: '', balance: null });
     const location = useLocation();
     const token = localStorage.getItem('token');
 
@@ -131,16 +131,22 @@ const Navbar = () => {
                             </div>
                         </div> */}
 
+
+
+                        {/* 
                         <div className="dropdown dropdown-end">
                             {user ? (
                                 <>
-                                    <div tabIndex={0} role="button" className="  avatar">
+                                    <div tabIndex={0} role="button" className="flex items-center gap-5 avatar">
+                                        <p className='font-bold hidden md:block'> {user.first_name} {user.last_name} </p>
                                         <div className="w-10 rounded-full">
-                                            {/* user profile img */}
+                                     
                                             {profileData.image ? (
                                                 <img src={profileData.image} />
                                             ) : (
-                                                <LiaUserEditSolid className='cursor-pointer text-[35px] pt-2 pl-2' />
+                                                <>
+                                                    <LiaUserEditSolid className='cursor-pointer text-[35px] pt-2 pl-2' />
+                                                </>
                                             )}
                                         </div>
                                     </div>
@@ -149,7 +155,7 @@ const Navbar = () => {
                                         }`}
                                     >
                                         <li>
-                                            <button disabled>{user.first_name} {user.last_name}</button>
+                                            <button className='md:hidden' disabled>{user.first_name} {user.last_name}</button>
                                         </li>
                                         {!isOnProtectedPage && (
                                             <>
@@ -207,11 +213,92 @@ const Navbar = () => {
                                     </div>
                                 </>
                             )}
+                        </div> */}
+
+                        <div className="dropdown dropdown-end">
+                            {loading ? (
+                                <span className="loading loading-spinner loading-md"></span> // or null
+                            ) : user ? (
+                                <>
+                                    <div tabIndex={0} role="button" className="flex items-center gap-5 avatar">
+                                        <p className='font-bold hidden md:block'> {user.first_name} {user.last_name} </p>
+                                        <div className="w-10 rounded-full">
+                                            {profileData?.image ? (
+                                                <img src={profileData.image} className="rounded-full object-cover w-full h-full" alt="Profile" />
+                                            ) : (
+                                                <LiaUserEditSolid className='cursor-pointer text-[35px] pt-2 pl-2' />
+                                            )}
+                                        </div>
+
+                                    </div>
+
+                                    <ul tabIndex={0} className={`menu menu-sm dropdown-content rounded-box z-[1] mt-3 w-52 p-2 shadow ${darkMode ? 'bg-black text-white' : 'bg-white text-black'
+                                        }`}
+                                    >
+                                        <li>
+                                            <button className='md:hidden' disabled>{user.first_name} {user.last_name}</button>
+                                        </li>
+                                        {!isOnProtectedPage && (
+                                            <>
+                                                <li>
+                                                    <Link to="/dashboard">Dashboard</Link>
+                                                </li>
+                                            </>
+                                        )}
+
+
+                                        {user?.username === 'hlic.it' &&
+                                            <>
+                                                <li className='md:hidden'>
+                                                    <Link to="/locations">Locations</Link>
+                                                </li>
+                                                <li className='md:hidden'>
+                                                    <Link to="/labservices">Lab Services</Link>
+                                                </li>
+
+                                            </>
+                                        }
+
+                                        {user?.username !== 'hlic.it' &&
+                                            <li className='md:hidden'>
+                                                <Link to="/profile">Profile</Link>
+                                            </li>
+                                        }
+
+                                        {user?.username !== 'hlic.histo' &&
+                                            <li className='md:hidden'>
+                                                <Link to="/profile">Profile</Link>
+                                            </li>
+                                        }
+
+                                        {user && user.me && (
+                                            <li className='md:hidden'>
+                                                <Link to="/hospitals">Hospitals</Link>
+                                            </li>
+                                        )}
+
+                                        <li className='md:hidden'>
+                                            <Link to="/reports">Reports</Link>
+                                        </li>
+                                        <hr className='md:hidden' />
+                                        <li>
+                                            <button onClick={logout}>Logout</button>
+                                        </li>
+                                    </ul>
+                                </>
+                            ) : (
+
+                                <div className="flex gap-2">
+                                    <Link to='/login' className="px-6 py-1 rounded bg-green-400">Login</Link>
+                                    <Link to='/register' className="px-6 py-1 rounded bg-blue-400">Register</Link>
+                                </div>
+                            )}
                         </div>
+
                     </div>
                 </div>
-            </div>
-        </section>
+            </div >
+        </section >
     )
 }
 

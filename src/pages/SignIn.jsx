@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import singin from '../assets/login.png'
 import axios from 'axios';
 import hand from '../assets/hand.png'
@@ -16,10 +16,16 @@ const SignIn = () => {
     password: "",
   })
 
-  const { login } = useContext(AuthContext)
+  const { user, loading, login } = useContext(AuthContext)
   const [successTitle, setSuccessTitle] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard');
+    }
+  }, [loading, user, navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -64,6 +70,12 @@ const SignIn = () => {
       setSuccessTitle("Failed")
       setSuccessMessage("An error occured. Please try again")
     }
+  }
+
+  if (loading) {
+    return <div className='flex items-center justify-center m-auto w-full min-h-svh'>
+      <span className="loading loading-spinner loading-md "></span>
+    </div>
   }
 
 
