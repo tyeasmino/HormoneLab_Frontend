@@ -163,6 +163,25 @@ const Sidebar = () => {
                 {!collapsed && <span className="ml-2">Hospital Authorities</span>}
               </Link>
             </li>
+
+            <li className="relative group">
+              <Link
+                data-tour-element='upload_reports'
+                to="/upload_reports"
+                className={`flex items-center gap-2 ${location.pathname === "/upload_reports" ? "p-1 shadow font-semibold" : ""}`}
+              >
+                <FaHospital
+                  className={`transition-all ${collapsed ? 'text-lg' : 'text-xl'}`}
+                />
+                {/* Show tooltip only when collapsed */}
+                <span
+                  className={`absolute left-16 hidden group-hover:block text-sm bg-gray-800 text-white   rounded px-2 py-1 ${collapsed ? 'opacity-100' : 'opacity-0'}`}
+                >
+                  Upload Reports
+                </span>
+                {!collapsed && <span className="ml-2">Upload Reports</span>}
+              </Link>
+            </li>
           </>
 
         }

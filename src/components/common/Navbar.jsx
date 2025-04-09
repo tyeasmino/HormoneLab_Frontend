@@ -256,6 +256,9 @@ const Navbar = () => {
                                                 <li className='md:hidden'>
                                                     <Link to="/hospitals">Hospital Authority</Link>
                                                 </li>
+                                                <li className='md:hidden'>
+                                                    <Link to="/upload_reports">Upload Reports</Link>
+                                                </li>
 
                                             </>
                                         }
