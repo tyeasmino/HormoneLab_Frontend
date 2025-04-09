@@ -88,8 +88,7 @@ const Navbar = () => {
                             <details>
                                 <summary>Care at Hormone Lab</summary>
                                 <ul
-                                    className={`z-10 absolute top-10 p-2 w-[190px] shadow  ${darkMode ? "bg-black text-white" : "bg-white text-black"
-                                        }`}
+                                    className={`z-10 absolute top-10 p-2 w-[190px] shadow  ${darkMode ? "bg-black text-white" : "bg-white text-black"}`}
                                 >
                                     <li><a>Home Collection</a></li>
                                     <li><a>FNA & Paps Collection</a></li>
@@ -192,7 +191,7 @@ const Navbar = () => {
 
                                         {user && user.me && (
                                             <li className='md:hidden'>
-                                                <Link to="/hospitals">Hospitals</Link>
+                                                <Link to="/myhospitals">Hospitals</Link>
                                             </li>
                                         )}
 
@@ -255,6 +254,12 @@ const Navbar = () => {
                                                 <li className='md:hidden'>
                                                     <Link to="/labservices">Lab Services</Link>
                                                 </li>
+                                                <li className='md:hidden'>
+                                                    <Link to="/employees">Marketing Executives</Link>
+                                                </li>
+                                                <li className='md:hidden'>
+                                                    <Link to="/hospitals">Hospital Authority</Link>
+                                                </li>
 
                                             </>
                                         }
@@ -273,7 +278,7 @@ const Navbar = () => {
 
                                         {user && user.me && (
                                             <li className='md:hidden'>
-                                                <Link to="/hospitals">Hospitals</Link>
+                                                <Link to="/myhospitals">Hospitals</Link>
                                             </li>
                                         )}
 

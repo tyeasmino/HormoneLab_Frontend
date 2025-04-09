@@ -16,6 +16,8 @@ import Hospitals from '../pages/Hospitals'
 import Locations from '../pages/Locations'
 import LabServiceManagement from '../pages/LabServiceManagement'
 import ProtectedRoute from './ProtectedRoute'
+import MarketingExecutiveManagement from '../pages/MarketingExecutiveManagement'
+import HospitalAuthorityManagement from '../pages/HospitalAuthorityManagement'
 
 const Index = () => {
     return (
@@ -34,7 +36,7 @@ const Index = () => {
                     <Route path="/dashboard" element={ <ProtectedRoute> <Dashboard /> </ProtectedRoute> } />
                     <Route path="/profile" element={ <ProtectedRoute> <Profile /> </ProtectedRoute> } />
                     <Route path="/reports" element={ <ProtectedRoute> <Reports /> </ProtectedRoute> } />
-                    <Route path="/hospitals" element={ <ProtectedRoute> <Hospitals /> </ProtectedRoute> } /> 
+                    <Route path="/myhospitals" element={ <ProtectedRoute> <Hospitals /> </ProtectedRoute> } /> 
                     {/* <Route path="/helping" element={<Helping />} /> */}
            
 
@@ -43,6 +45,8 @@ const Index = () => {
                     {/* Only For Admin */}
                     <Route path="/locations" element={ <ProtectedRoute> <Locations /> </ProtectedRoute> } />
                     <Route path="/labservices" element={ <ProtectedRoute> <LabServiceManagement /> </ProtectedRoute> } />  
+                    <Route path="/employees" element={ <ProtectedRoute> <MarketingExecutiveManagement /> </ProtectedRoute> } />  
+                    <Route path="/hospitals" element={ <ProtectedRoute> <HospitalAuthorityManagement /> </ProtectedRoute> } />  
 
                 </Routes>
                 <Footer />

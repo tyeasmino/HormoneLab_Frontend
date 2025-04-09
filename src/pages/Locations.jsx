@@ -19,10 +19,7 @@ const Locations = () => {
   const [selectedExecutive, setSelectedExecutive] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-
-
-
-
+  
   useEffect(() => {
     fetchData();
   }, []);
