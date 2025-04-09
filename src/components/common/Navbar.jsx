@@ -228,22 +228,18 @@ const Navbar = () => {
                                                 <LiaUserEditSolid className='cursor-pointer text-[35px] pt-2 pl-2' />
                                             )}
                                         </div>
-
                                     </div>
 
                                     <ul tabIndex={0} className={`menu menu-sm dropdown-content rounded-box z-[1] mt-3 w-52 p-2 shadow ${darkMode ? 'bg-black text-white' : 'bg-white text-black'
                                         }`}
                                     >
-                                        <li>
-                                            <button className='md:hidden' disabled>{user.first_name} {user.last_name}</button>
+                                        <li className='md:hidden'>
+                                            <button disabled>{user.first_name} {user.last_name}</button>
                                         </li>
-                                        {!isOnProtectedPage && (
-                                            <>
-                                                <li>
-                                                    <Link to="/dashboard">Dashboard</Link>
-                                                </li>
-                                            </>
-                                        )}
+
+                                        <li>
+                                            <Link to="/dashboard">Dashboard</Link>
+                                        </li>
 
 
                                         {user?.username === 'hlic.it' &&
@@ -264,13 +260,8 @@ const Navbar = () => {
                                             </>
                                         }
 
-                                        {user?.username !== 'hlic.it' &&
-                                            <li className='md:hidden'>
-                                                <Link to="/profile">Profile</Link>
-                                            </li>
-                                        }
 
-                                        {user?.username !== 'hlic.histo' &&
+                                        {(user?.username !== 'hlic.it' || user?.username !== 'hlic.histo') &&
                                             <li className='md:hidden'>
                                                 <Link to="/profile">Profile</Link>
                                             </li>

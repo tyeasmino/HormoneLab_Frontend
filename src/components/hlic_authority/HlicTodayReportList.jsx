@@ -174,6 +174,17 @@ const HlicTodayReportList = () => {
 
                   <td className="px-2 md:px-4 py-2 text-center">
                     <a
+                      href={report.report_file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span className="hidden md:inline md:ml-1">Download</span>
+                    </a>
+                  </td>
+                  {/* <td className="px-2 md:px-4 py-2 text-center">
+                    <a
                       href={`https://hormone-lab-backend.vercel.app/clients/download-report/${report.id}`} // Backend URL for downloading the report
                       target="_blank"
                       rel="noopener noreferrer"
@@ -183,7 +194,7 @@ const HlicTodayReportList = () => {
                       <Download className="w-4 h-4" />
                       <span className="hidden md:inline md:ml-1">Download</span>
                     </a>
-                  </td>
+                  </td> */}
 
 
                   <td className="px-2 md:px-4 py-2 text-[12px] md:text-base">
