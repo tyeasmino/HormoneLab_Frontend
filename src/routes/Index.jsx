@@ -18,6 +18,7 @@ import LabServiceManagement from '../pages/LabServiceManagement'
 import ProtectedRoute from './ProtectedRoute'
 import MarketingExecutiveManagement from '../pages/MarketingExecutiveManagement'
 import HospitalAuthorityManagement from '../pages/HospitalAuthorityManagement'
+import ReportsManagement from '../pages/ReportsManagement'
 
 const Index = () => {
     return (
@@ -47,7 +48,9 @@ const Index = () => {
                     <Route path="/labservices" element={ <ProtectedRoute> <LabServiceManagement /> </ProtectedRoute> } />  
                     <Route path="/employees" element={ <ProtectedRoute> <MarketingExecutiveManagement /> </ProtectedRoute> } />  
                     <Route path="/hospitals" element={ <ProtectedRoute> <HospitalAuthorityManagement /> </ProtectedRoute> } />  
+                    <Route path="/upload_reports" element={ <ProtectedRoute> <ReportsManagement /> </ProtectedRoute> } />  
 
+                    
                 </Routes>
                 <Footer />
             </AuthProvider>

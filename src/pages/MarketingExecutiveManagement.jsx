@@ -52,7 +52,7 @@ const MarketingExecutiveManagement = () => {
   
     try {
       await axios.delete(
-        `http://127.0.0.1:8000/accounts/users/${userId}/delete/`,
+        `https://hormone-lab-backend.vercel.app/accounts/users/${userId}/delete/`,
         { headers: { Authorization: `Token ${token}` } }
       );
   

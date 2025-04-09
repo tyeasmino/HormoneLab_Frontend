@@ -42,7 +42,7 @@ const HlicAuthorityDashboard = () => {
           axios.get("https://hormone-lab-backend.vercel.app/executives/lab-services/", {
             headers: { Authorization: `Token ${token}` },
           }),
-          axios.get("https://hormone-lab-backend.vercel.app/hospitals/hospital_authorities/", {
+          axios.get("https://hormone-lab-backend.vercel.app/hospitals/all_hospital_authorities/", {
             headers: { Authorization: `Token ${token}` },
           }),
           axios.get("https://hormone-lab-backend.vercel.app/clients/reports/", {
@@ -91,8 +91,8 @@ const HlicAuthorityDashboard = () => {
     const location = locations.find((loc) => loc.id === executive.location);
 
     return {
-      location: location ? location.location_name : "Unknown",
-      executive: user ? `${user.first_name} ${user.last_name}`.trim() || user.username : "Unknown",
+      location: location ? location.location_name : "---",
+      executive: user ? `${user.first_name} ${user.last_name}`.trim() || user.username : "---",
     };
   });
 
@@ -103,8 +103,8 @@ const HlicAuthorityDashboard = () => {
 
     return {
       hospitalName: hospital.hospital_name,
-      locationName: location ? location.location_name : "Unknown",
-      userName: user ? `${user.first_name} ${user.last_name}`.trim() || user.username : "Unknown",
+      locationName: location ? location.location_name : "---",
+      userName: user ? `${user.first_name} ${user.last_name}`.trim() || user.username : "---",
     };
   });
 
@@ -117,7 +117,7 @@ const HlicAuthorityDashboard = () => {
     { label: "Total Services", value: loading ? "Loading..." : servicesCount, icon: <GiDrippingTube /> },
     { label: "Total Due", value: loading ? "Loading..." : `${totalDue.toLocaleString()}`, icon: <FaMoneyBillWave /> },
     { label: "Total Reports", value: loading ? "Loading..." : reports, icon: <FaFileInvoice /> },
-    { label: "Due Reports", value: 15, icon: <FaFileInvoice /> },
+    // { label: "Due Reports", value: 15, icon: <FaFileInvoice /> },
   ];
 
   const chartData = [
@@ -198,9 +198,9 @@ const HlicAuthorityDashboard = () => {
         </Card>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="flex gap-6">
         {/* Location & Executive Table */}
-        <Card className="bg-white shadow-md mt-6 p-4">
+        <Card className="w-full md:w-1/3 bg-white shadow-md mt-6 p-4">
           <h2 className="text-lg font-semibold mb-4">Location & Marketing Executives</h2>
           <Table>
             <TableHeader>
@@ -220,7 +220,7 @@ const HlicAuthorityDashboard = () => {
           </Table>
         </Card>
         {/* Location & Executive Table */}
-        <Card className="bg-white shadow-md mt-6 p-4">
+        <Card className="w-full md:w-2/3 bg-white shadow-md mt-6 p-4">
           <h2 className="text-lg font-semibold mb-4">Hospital Authorities</h2>
           {loading ? (
             <p>Loading...</p>

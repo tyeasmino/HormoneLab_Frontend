@@ -21,10 +21,10 @@ const HospitalAuthorityManagement = () => {
     setLoading(true);
     try {
       const [authorityRes, userRes] = await Promise.all([
-        axios.get("http://127.0.0.1:8000/hospitals/all_hospital_authorities/", {
+        axios.get("https://hormone-lab-backend.vercel.app/hospitals/all_hospital_authorities/", {
           headers: { Authorization: `Token ${token}` },
         }),
-        axios.get("http://127.0.0.1:8000/accounts/users/", {
+        axios.get("https://hormone-lab-backend.vercel.app/accounts/users/", {
           headers: { Authorization: `Token ${token}` },
         }),
       ]);
@@ -52,7 +52,7 @@ const HospitalAuthorityManagement = () => {
 
     try {
       await axios.delete(
-        `http://127.0.0.1:8000/accounts/users/${userId}/delete/`,
+        `https://hormone-lab-backend.vercel.app/accounts/users/${userId}/delete/`,
         { headers: { Authorization: `Token ${token}` } }
       );
 
