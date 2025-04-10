@@ -49,8 +49,8 @@ const Navbar = () => {
                                     d="M4 6h16M4 12h8m-8 6h16" />
                             </svg> */}
                             <Link to='https://hormonelab.org/' className="w-[40px] h-[40px]">
-                        <img src={onlyLogo} />
-                    </Link>
+                                <img src={onlyLogo} />
+                            </Link>
                         </div>
                         <ul
                             tabIndex={0}
@@ -221,6 +221,7 @@ const Navbar = () => {
                             )}
                         </div> */}
 
+
                         <div className="dropdown dropdown-end">
                             {loading ? (
                                 <span className="loading loading-spinner loading-md"></span> // or null
@@ -270,12 +271,11 @@ const Navbar = () => {
                                             </>
                                         }
 
-
-                                        {(user?.username !== 'hlic.it' || user?.username !== 'hlic.histo') &&
+                                        {(user?.username !== 'hlic.it' && user?.username !== 'hlic.histo') && (
                                             <li className='md:hidden'>
                                                 <Link to="/profile">Profile</Link>
                                             </li>
-                                        }
+                                        )}
 
                                         {user && user.me && (
                                             <li className='md:hidden'>

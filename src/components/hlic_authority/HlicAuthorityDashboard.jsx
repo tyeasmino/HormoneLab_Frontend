@@ -198,7 +198,7 @@ const HlicAuthorityDashboard = () => {
         </Card>
       </div>
 
-      <div className="flex gap-6">
+      <div className="flex flex-col md:flex-row gap-6">
         {/* Location & Executive Table */}
         <Card className="w-full md:w-1/3 bg-white shadow-md mt-6 p-4">
           <h2 className="text-lg font-semibold mb-4">Location & Marketing Executives</h2>
@@ -225,24 +225,31 @@ const HlicAuthorityDashboard = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Hospital Name</TableHead>
-                  <TableHead>Hospital Authority</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {formattedHospitalData.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{row.locationName}</TableCell>
-                    <TableCell>{row.hospitalName}</TableCell>
-                    <TableCell>{row.userName}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="overflow-x-auto w-full">
+              <table className="min-w-full table-auto border border-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-2 text-left text-sm md:text-base">Location</th>
+                    <th className="px-4 py-2 text-left text-sm md:text-base">
+                      <span>Hospital</span> <span className="hidden md:inline">Name</span>
+                    </th>
+                    <th className="px-4 py-2 text-left text-sm md:text-base">
+                      <span className="hidden md:inline">Hospital</span> <span>Authority</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {formattedHospitalData.map((row, index) => (
+                    <tr key={index} className="border-t border-gray-200">
+                      <td className="px-4 py-2 text-sm md:text-base">{row.locationName}</td>
+                      <td className="px-4 py-2 text-sm md:text-base">{row.hospitalName}</td>
+                      <td className="px-4 py-2 text-sm md:text-base">{row.userName}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
           )}
         </Card>
       </div>
