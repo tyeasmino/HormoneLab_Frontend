@@ -1,10 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import hlicLogo from '../../assets/hlicLogo.jpg';
+import onlyLogo from '../../assets/only-logo.png'
 import { Link, useLocation } from 'react-router';
 import { MdOutlineLightMode } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
 import { AuthContext } from '../../contexts/AuthContext';
 import { LiaUserEditSolid } from 'react-icons/lia';
+
+
+
 
 const Navbar = () => {
     const { user, logout, loading, profileData } = useContext(AuthContext);
@@ -32,7 +36,7 @@ const Navbar = () => {
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-                            <svg
+                            {/* <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-5 w-5"
                                 fill="none"
@@ -43,14 +47,17 @@ const Navbar = () => {
                                     strokeLinejoin="round"
                                     strokeWidth="2"
                                     d="M4 6h16M4 12h8m-8 6h16" />
-                            </svg>
+                            </svg> */}
+                            <Link to='https://hormonelab.org/' className="w-[40px] h-[40px]">
+                        <img src={onlyLogo} />
+                    </Link>
                         </div>
                         <ul
                             tabIndex={0}
                             className={`menu menu-sm dropdown-content rounded-box z-[1] mt-3 w-64 p-2 shadow ${darkMode ? 'bg-black text-white' : 'bg-white text-black'
                                 }`}
                         >
-                            <li><Link to='/'>Home</Link></li>
+                            {/* <li><Link to='/'>Home</Link></li>
                             <li>
                                 <a>Care at Hormone Lab</a>
                                 <ul className="p-2">
@@ -74,16 +81,16 @@ const Navbar = () => {
                                 </ul>
                             </li>
                             <li><a>Research</a></li>
-                            <li><a>Contact</a></li>
+                            <li><a>Contact</a></li> */}
                         </ul>
                     </div>
-                    <Link to='/' className="w-[160px] hidden md:block">
+                    <Link to='https://hormonelab.org/' className="w-[160px] hidden md:block">
                         <img src={hlicLogo} />
                     </Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1">
-                        <li><Link to='/'>Home</Link></li>
+                        {/* <li><Link to='/'>Home</Link></li>
                         <li>
                             <details>
                                 <summary>Care at Hormone Lab</summary>
@@ -116,7 +123,7 @@ const Navbar = () => {
                             </details>
                         </li>
                         <li><a>Research</a></li>
-                        <li><a>Contact</a></li>
+                        <li><a>Contact</a></li> */}
                     </ul>
                 </div>
                 <div className="navbar-end flex gap-2">
