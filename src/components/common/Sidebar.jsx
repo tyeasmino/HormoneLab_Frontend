@@ -63,7 +63,7 @@ const Sidebar = () => {
         </li>
 
                                       
-        {(user?.username !== 'hlic.it' && user?.username !== 'hlic.histo') &&
+        {(user?.username !== 'hlic.it' && user?.username !== 'hlic.histo' && user?.username !== 'hlic.lab') &&
           <li className="relative group">
             <Link
               data-tour-element='profile'

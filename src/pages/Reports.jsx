@@ -17,6 +17,7 @@ const Reports = () => {
             <section className='max-w-5xl mx-auto'>
                 {user?.username === 'hlic.histo' && <ReportList />}
                 {user?.username === 'hlic.it' && <ReportList />}
+                {user?.username === 'hlic.lab' && <ReportList />}
                 {(user && user.ha) ? (<> <MarketingExecutiveReports /> </>) : (<></>)}
                 {(user && user.me) ? (<> <MarketingExecutiveReports /> </>) : (<></>)}
             </section>

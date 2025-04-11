@@ -18,14 +18,14 @@ const Dashboard = () => {
         {user?.username === 'hlic.it' && <HlicAuthorityDashboard />}
 
         {/* Render HlicLabDashboard if the username is 'hlic.histo' */}
-        {user?.username === 'hlic.histo' && <HlicLabDashboard />}
+        {(user?.username === 'hlic.histo' ) && <HlicLabDashboard />}
+        {(user?.username === 'hlic.lab' ) && <HlicLabDashboard />}
 
         {/* Render HospitalAuthorityDashboard if user is hospital authority */}
         {user?.ha && <HospitalAuthorityDashboard />}
 
         {/* Render MarketingExecutiveDashboard if user is marketing executive */}
         {user?.me && <MarketingExecutiveDashboard />}
-
       </section>
     </section>
   )
