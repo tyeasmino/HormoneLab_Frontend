@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
+  SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectContent,
 } from "@/components/ui/select"; // ✅ Fixed import
+import { motion } from "framer-motion";
 import { UploadCloud } from "lucide-react";
-import HlicTodayReportList from "./HlicTodayReportList";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export const HlicLabDashboard = () => {
+  // const BASE_URL = "https://hormone-lab-backend.vercel.app";
+  // const testing_URL = "http://127.0.0.1:8000/";
+
+
   const token = localStorage.getItem("token");
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -115,6 +117,7 @@ export const HlicLabDashboard = () => {
 
       const res = await fetch(
         "https://hormone-lab-backend.vercel.app/clients/reports/",
+        // `${BASE_URL}/clients/reports/`,
         {
           method: "POST",
           headers: {
@@ -280,7 +283,7 @@ export const HlicLabDashboard = () => {
         </form>
       </motion.div>
 
-      <HlicTodayReportList />
+      {/* <HlicTodayReportList /> */}
     </div>
   );
 };

@@ -1,14 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Download, Trash2 } from "lucide-react";
-import Loading from "../common/Loading";
 import { motion } from "framer-motion";
-import { Dialog } from "../ui/dialog";
+import { Download, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
-
-
+import Loading from "../common/Loading";
 
 
 const HlicTodayReportList = () => {
@@ -95,8 +90,6 @@ const HlicTodayReportList = () => {
 
 
 
-
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -115,7 +108,7 @@ const HlicTodayReportList = () => {
       transition={{ duration: 0.5, delay: 0.2 }}
       className="max-w-5xl mx-auto mt-8"
     >
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">📜 Today's Reports</h2>
+      <h2 className="text-xl font-semibold text-gray-700 mb-4">📜 Today's Reports in Sender Dashboard</h2>
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg mt-6">
         <table className="w-full table-auto text-left">
